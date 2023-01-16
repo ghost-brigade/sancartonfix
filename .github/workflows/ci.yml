@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  workflow_dispatch: ~
+  push:
+    branches:
+      - 'master'
+
+jobs:
+  tests-vue:
+    uses: ./.github/workflows/tests-vue.yml
+  tests-php:
+    uses: ./.github/workflows/tests-php.yml
+  build-caddy:
+    needs:
+      - tests-php
+    uses: ./.github/workflows/build-caddy.yml
+    secrets: inherit
+  build-php:
+    needs:
+      - tests-php
+    uses: ./.github/workflows/build-php.yml
+    secrets: inherit
+  deployment:
+    needs:
+      - tests-vue
+      - build-caddy
+      - build-php
+    uses: ./.github/workflows/deployment.yml
+    secrets: inherit

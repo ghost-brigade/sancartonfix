@@ -1,0 +1,15 @@
+name: Deployment
+
+on:
+  workflow_call: ~
+  workflow_dispatch: ~
+
+jobs:
+  deploy:
+    name: Redeploy webhook call
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy docker container webhook
+        uses: joelwmale/webhook-action@master
+        with:
+          url: ${{ secrets.WEBHOOK_URL }}
