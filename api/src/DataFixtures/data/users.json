@@ -1,0 +1,12 @@
+[
+    {
+        "email":"admin@localhost",
+        "password":"password",
+        "roles":["ROLE_ADMIN"]
+    },
+    {
+        "email":"user@localhost",
+        "password":"password",
+        "roles":["ROLE_USER"]
+    }
+]
