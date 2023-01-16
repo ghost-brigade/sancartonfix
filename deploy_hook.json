@@ -1,0 +1,22 @@
+[
+  {
+    "id": "deploy",
+    "execute-command": "deploy_script.sh",
+    "command-working-directory": "/path/to/project/",
+    "response-headers": [{
+      "name": "Access-Control-Allow-Origin",
+      "value": "*"
+    }],
+    "response-message": "Redeploying API server.",
+    "trigger-rule": {
+      "match": {
+        "type": "value",
+        "value": "DEPLOY_SECRET_KEY",
+        "parameter": {
+          "source": "url",
+          "name": "_token"
+        }
+      }
+    }
+  }
+]
