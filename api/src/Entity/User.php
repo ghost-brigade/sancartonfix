@@ -9,8 +9,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
-use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -44,7 +43,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     securityMessage: 'Only admins can access this resource'
 )]
 */
-#[Patch(
+#[Put(
     security: 'is_granted("ROLE_ADMIN") or object == user',
     securityMessage: 'Only admins can edit users or the user himself'
 )]
@@ -85,14 +84,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[Groups(['user_read', 'user_write'])]
+    #[Groups(['user_write'])]
     #[Assert\Type(type: 'string')]
     #[Assert\Length(
         min: 8, minMessage: 'Your password should be at least {{ limit }} characters',
         max: 200, maxMessage: 'Your password should not be more than {{ limit }} characters'
     )]
     #[ApiProperty(writable: true, readable: false, example: 'password', description: 'The password of the user', required: false)]
-
     private ?string $plainPassword = null;
 
     public function getId(): ?Uuid
