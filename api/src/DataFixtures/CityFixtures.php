@@ -11,19 +11,22 @@ class CityFixtures extends Fixture
     public function load(ObjectManager $manager): void {
         $datas = json_decode(file_get_contents(__DIR__ . '/data/cities.json'), true);
 
+        $codes = [];
         foreach ($datas as $data) {
+            if(in_array($data['Code_postal'], $codes)) {
+                continue;
+            } else {
+                $city = new City();
+                $city->setPostalCode(intval($data['Code_postal']));
+                $city->setName($data['Nom_commune']);
+                $coords = explode(',', $data['coordonnees_gps']);
 
-            $city = new City();
-            $city->setCode(intval($data['Code_commune_INSEE']));
-            $city->setName($data['Nom_commune']);
-            $city->setPostalCode(intval($data['Code_postal']));
+                $city->setLatitude(floatval(trim($coords[0] ?? null)));
+                $city->setLongitude(floatval(trim($coords[1] ?? null)));
 
-            $coords = explode(',', $data['coordonnees_gps']);
-
-            $city->setLatitude(floatval(trim($coords[0] ?? null)));
-            $city->setLongitude(floatval(trim($coords[1] ?? null)));
-
-            $manager->persist($city);
+                $manager->persist($city);
+                $codes[] = $data['Code_postal'];
+            }
         }
 
         $manager->flush();

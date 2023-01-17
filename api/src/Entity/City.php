@@ -49,15 +49,11 @@ class City
     #[Assert\Type(type: 'integer')]
     #[Groups(['city_read', 'city_write'])]
     #[ApiProperty(identifier: true, writable: true, readable: true)]
-    private int $code;
+    private int $postalCode;
 
     #[ORM\Column(length: 255)]
     #[Groups(['city_read', 'city_write'])]
     private ?string $name = null;
-
-    #[ORM\Column]
-    #[Groups(['city_read', 'city_write'])]
-    private ?int $postalCode = null;
 
     #[ORM\Column(nullable: true)]
     #[Groups(['city_read', 'city_write'])]
@@ -67,14 +63,14 @@ class City
     #[Groups(['city_read', 'city_write'])]
     private ?float $longitude = null;
 
-    public function getCode(): int
+    public function getPostalCode(): ?int
     {
-        return $this->code;
+        return $this->postalCode;
     }
 
-    public function setCode(int $code): self
+    public function setPostalCode(int $postalCode): self
     {
-        $this->code = $code;
+        $this->postalCode = $postalCode;
 
         return $this;
     }
@@ -87,18 +83,6 @@ class City
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getPostalCode(): ?int
-    {
-        return $this->postalCode;
-    }
-
-    public function setPostalCode(int $postalCode): self
-    {
-        $this->postalCode = $postalCode;
 
         return $this;
     }
