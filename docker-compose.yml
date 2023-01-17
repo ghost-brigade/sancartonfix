@@ -75,7 +75,12 @@ services:
       - target: 5432
         published: 5432
         protocol: tcp
-
+  mailer:
+    image: schickling/mailcatcher
+    restart: unless-stopped
+    ports:
+      - 1025:1025
+      - 1080:1080
 volumes:
   caddy_data:
   caddy_config:
