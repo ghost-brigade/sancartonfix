@@ -2,11 +2,13 @@
     {
         "email":"admin@localhost",
         "password":"password",
-        "roles":["ROLE_ADMIN"]
+        "roles":["ROLE_ADMIN"],
+        "is_verified": true
     },
     {
         "email":"user@localhost",
         "password":"password",
-        "roles":["ROLE_USER"]
+        "roles":["ROLE_USER"],
+        "is_verified": true
     }
 ]

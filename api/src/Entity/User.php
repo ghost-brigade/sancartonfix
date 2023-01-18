@@ -9,7 +9,10 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Controller\User\RegisterController;
+use App\Controller\User\RegisterValidationController;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -36,14 +39,11 @@ use Symfony\Component\Validator\Constraints as Assert;
     security: 'is_granted("ROLE_ADMIN")',
     securityMessage: 'Only admins can access this resource.'
 )]
-/* Ajouter un systeme d'inscription a la place
 #[Post(
-    denormalizationContext:  ['groups' => ['user_post']],
-    security: 'is_granted("ROLE_ADMIN")',
-    securityMessage: 'Only admins can access this resource'
+    denormalizationContext:  ['groups' => ['user_post', 'user_write']],
 )]
-*/
 #[Put(
+    denormalizationContext: ['groups' => ['user_put', 'user_write']],
     security: 'is_granted("ROLE_ADMIN") or object == user',
     securityMessage: 'Only admins can edit users or the user himself'
 )]
@@ -92,6 +92,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     )]
     #[ApiProperty(writable: true, readable: false, example: 'password', description: 'The password of the user', required: false)]
     private ?string $plainPassword = null;
+
+    #[ORM\Column]
+    private ?bool $isVerified = false;
 
     public function getId(): ?Uuid
     {
@@ -171,5 +174,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function isIsVerified(): ?bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
+
+        return $this;
     }
 }
