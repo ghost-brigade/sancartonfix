@@ -126,6 +126,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $lastname = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank]
+    #[Assert\Type('boolean')]
+    #[Assert\Choice([true, false])]
+    #[Groups(['user_read', 'user_write'])]
+    #[ApiProperty(writable: true, readable: true, example: 'true', description: 'The gender of the user')]
     private ?bool $gender = null;
 
     public function __construct()
