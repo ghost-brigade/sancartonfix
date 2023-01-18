@@ -1,0 +1,51 @@
+@import './variables';
+@import './forms';
+@import './menu';
+@import './sections';
+
+
+@import './home';
+
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap');
+
+body {
+    font-family: 'Lora', serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#app {
+    min-height: 100vh;
+    background-color: $background_color;
+    color: $text_color;
+}
+
+a {
+    text-decoration: none;
+    color: $text_color;
+}
+
+h2 {
+    margin-bottom: 2rem;
+    font-size: 24px;
+}
+
+.app-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    background-color: $background_color;
+
+    img {
+        height: 40px;
+        margin-right: 1rem;
+    }
+}
