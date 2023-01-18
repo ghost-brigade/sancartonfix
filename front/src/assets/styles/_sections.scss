@@ -1,0 +1,26 @@
+section {
+    padding: 5rem 1.5rem;
+}
+
+.app-img_section {
+    position: relative;
+    padding: 3rem 0;
+
+    .app-img_section_img {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+    }
+
+    .app-img_section_content {
+        position: relative;
+        color: white;
+        padding: 2rem 1.5rem;
+        backdrop-filter: blur(5px);
+        background-color: rgba(0, 0, 0, 0.4);
+        max-width: 800px;
+        margin: auto;
+    }
+}

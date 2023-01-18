@@ -1,0 +1,39 @@
+.app-menu_links {
+    @media screen and (max-width: 768px) {
+        position: fixed;
+        height: 0;
+        width: 100%;
+        top: 56px;
+        left: 0;
+        background-color: $background_color;
+        z-index: 10;
+        transition: 0.5s;
+        overflow: hidden;
+    
+        &.opened {
+            height: 100vh;
+            overflow: auto;
+        }
+
+        nav {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            gap: 2rem;
+        }
+    }
+
+    nav a {
+        margin: 0 0.3rem;
+    }
+}
+
+.app-menu_responsive_icon {
+    display: block;
+    
+    @media screen and (min-width: 768px) {
+        display: none;
+    }
+}

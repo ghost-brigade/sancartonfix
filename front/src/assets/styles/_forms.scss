@@ -1,0 +1,41 @@
+form {
+    max-width: 600px;
+    margin: auto;
+}
+
+.app-form_row {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+
+    label {
+        margin-bottom: 0.5rem;
+    }
+
+    input, select {
+        padding: 0.5rem;
+        border: 1px solid $secondary_color;
+        &:focus {
+            outline: none;
+            border-color: $main_color;
+        }
+    }
+
+    .error {
+        color: $error_color;
+        font-size: 0.8rem;
+    }
+}
+
+button[type=submit], input[type=submit] {
+    width: 100%;
+    padding: 1rem 0.5rem;
+    border: 0;
+    background-color: $main_color;
+    color: white;
+    
+    &:focus {
+        outline: none;
+        border-color: $main_color;
+    }
+}

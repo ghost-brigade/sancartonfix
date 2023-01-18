@@ -1,0 +1,29 @@
+.app-home_illustrations {
+    display: flex;
+    flex-direction: column;
+
+    @media screen and (min-width: 768px) {
+        flex-direction: row;
+    }
+}
+
+.app-home_illustration {
+    position: relative;
+    height: 400px;
+    max-height: 45vh;
+    flex: 1;
+
+    img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+    }
+
+    h2 {
+        position: absolute;
+        bottom: 1rem;
+        left: 1rem;
+        color: white;
+        font-weight: normal;
+    }
+}
