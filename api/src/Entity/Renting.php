@@ -2,32 +2,77 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\RentingRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: RentingRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['renting_read']],
+    denormalizationContext: ['groups' => ['renting_write']],
+)]
+#[GetCollection(
+    normalizationContext: ['groups' => ['renting_cget', 'renting_read']],
+    security: 'is_granted("ROLE_USER")',
+    securityMessage: 'You are not allowed to access this resource.',
+)]
+#[Get(
+    normalizationContext: ['groups' => ['renting_get', 'renting_read']],
+    security: 'is_granted("ROLE_USER")',
+    securityMessage: 'You are not allowed to access this resource.',
+)]
+#[Post(
+    denormalizationContext: ['groups' => ['renting_post', 'renting_write']],
+    security: 'is_granted("ROLE_USER")',
+    securityMessage: 'You are not allowed to access this resource.',
+)]
+#[Put(
+    denormalizationContext: ['groups' => ['renting_put', 'renting_write']],
+    security: 'is_granted("ROLE_ADMIN") or object.getClient() == user',
+    securityMessage: 'You are not allowed to access this resource.',
+)]
+//todo : peut etre faire un systeme d'annulation de reservation mais seulement 2j avant et envoyer un remboursement au proprio avec des frais d'annulation
+#[Delete(
+    security: 'is_granted("ROLE_ADMIN") or object.getClient() == user',
+    securityMessage: 'You are not allowed to access this resource.',
+)]
 class Renting
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['renting_read'])]
+    #[ApiProperty(identifier: true)]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+    #[Groups(['renting_read', 'renting_write'])]
+    #[ApiProperty(example: '2021-01-01', openapiContext: ['format' => 'date'], readable: true, writable: true, required: true)]
     private ?\DateTimeImmutable $dateStart = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+    #[Groups(['renting_read', 'renting_write'])]
+    #[ApiProperty(example: '2021-01-02', openapiContext: ['format' => 'date'], readable: true, writable: true, required: true)]
     private ?\DateTimeImmutable $dateEnd = null;
 
     #[ORM\ManyToOne(inversedBy: 'rentings')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['renting_read', 'renting_write'])]
+    #[ApiProperty(readable: true, writable: true, required: true, example: '/api/users/{id}')]
     private ?User $client = null;
 
     #[ORM\ManyToOne(inversedBy: 'rentings')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['renting_read', 'renting_write'])]
+    #[ApiProperty(readable: true, writable: true, required: true, example: '/api/housing/{id}')]
     private ?Housing $housing = null;
 
     #[ORM\OneToOne(mappedBy: 'renting', cascade: ['persist', 'remove'])]
