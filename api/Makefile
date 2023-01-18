@@ -1,3 +1,10 @@
+pull:
+	@echo "Pulling everything..."
+	@git pull
+	@docker-compose exec php composer install
+	$(MAKE) migrate
+	@echo "Everything pulled."
+
 migration:
 	@echo "Creating migration..."
 	@docker-compose exec php php bin/console make:migration
@@ -29,7 +36,6 @@ reset:
 install:
 	@echo "Installing dependencies..."
 	@docker-compose up -d
-	@cp .env.sample .env
 	@docker-compose exec php composer install
 	$(MAKE) db
 	$(MAKE) migrate
