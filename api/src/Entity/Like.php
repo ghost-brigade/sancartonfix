@@ -14,6 +14,7 @@ use ApiPlatform\Metadata\Put;
 use App\Repository\LikeRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: LikeRepository::class)]
@@ -58,11 +59,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Like
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: 'uuid', unique: true)]
+    #[ORM\GeneratedValue(strategy: "CUSTOM")]
+    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     #[Groups(['like_read'])]
     #[ApiProperty(identifier: true, writable: false, readable: true)]
-    private ?int $id = null;
+    private $id = null;
 
     #[ORM\Column]
     #[Assert\NotNull]
@@ -86,7 +88,7 @@ class Like
     #[ApiProperty(writable: true, readable: true, required: true, example: '/api/housings/{id}', description: 'The housing liked by the user.')]
     private ?Housing $housing = null;
 
-    public function getId(): ?int
+    public function getId(): ?Uuid
     {
         return $this->id;
     }

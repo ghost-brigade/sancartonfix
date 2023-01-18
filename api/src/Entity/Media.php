@@ -14,6 +14,7 @@ use App\Repository\MediaRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MediaRepository::class)]
@@ -51,11 +52,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Media
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: 'uuid', unique: true)]
+    #[ORM\GeneratedValue(strategy: "CUSTOM")]
+    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     #[Groups(['media_read'])]
     #[ApiProperty(identifier: true, writable: false, readable: true)]
-    private ?int $id = null;
+    private $id = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
@@ -72,7 +74,7 @@ class Media
     #[ORM\JoinColumn(nullable: false)]
     private ?Housing $housing = null;
 
-    public function getId(): ?int
+    public function getId(): ?Uuid
     {
         return $this->id;
     }

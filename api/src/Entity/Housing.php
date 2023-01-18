@@ -20,6 +20,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: HousingRepository::class)]
@@ -91,11 +92,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Housing
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: 'uuid', unique: true)]
+    #[ORM\GeneratedValue(strategy: "CUSTOM")]
+    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     #[Groups(['housing_read'])]
     #[ApiProperty(identifier: true)]
-    private ?int $id = null;
+    private $id = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
@@ -133,7 +135,7 @@ class Housing
     )]
     #[Assert\Type(type: 'float', message: 'The latitude must be a float')]
     #[Groups(['housing_read', 'housing_write'])]
-    #[ApiProperty(required: true, readable: true, writable: true, example: 48.856614)]
+    #[ApiProperty(required: true, readable: true, writable: true, example: 48.856614, openapiContext: ['type' => 'number', 'format' => 'float'])]
     private ?float $latitude = null;
 
     #[ORM\Column(nullable: true, type: 'decimal', precision: 11, scale: 8)]
@@ -144,7 +146,7 @@ class Housing
     )]
     #[Assert\Type(type: 'float', message: 'The latitude must be a float')]
     #[Groups(['housing_read', 'housing_write'])]
-    #[ApiProperty(required: true, readable: true, writable: true, example: 48.856614)]
+    #[ApiProperty(required: true, readable: true, writable: true, example: 48.856614, openapiContext: ['type' => 'number', 'format' => 'float'])]
     private ?float $longitude = null;
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
@@ -156,7 +158,7 @@ class Housing
     #[Assert\Type(type: 'float', message: 'The price must be a float')]
     #[Assert\PositiveOrZero(message: 'The price must be greater than 0')]
     #[Groups(['housing_read', 'housing_write'])]
-    #[ApiProperty(required: true, readable: true, writable: true, example: 100)]
+    #[ApiProperty(required: true, readable: true, writable: true, example: 100, openapiContext: ['type' => 'number', 'format' => 'float'])]
     private ?float $price = null;
 
     #[ORM\Column]
@@ -170,11 +172,15 @@ class Housing
     #[ApiProperty(readable: true, writable: true, example: '/api/users/{id}', securityPostDenormalize: 'is_granted("ROLE_ADMIN")')]
     private ?User $owner = null;
 
+    #[ORM\Column]
+    #[Groups(['housing_read'])]
+    private ?\DateTimeImmutable $createdAt = null;
+
     #[ORM\ManyToOne(inversedBy: 'housings')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['housing_read', 'housing_write'])]
-    #[ApiProperty(readable: true, writable: true, example: '/api/categories/{id}', securityPostDenormalize: 'is_granted("ROLE_ADMIN")')]
-    private ?Category $category = null;
+    #[ApiProperty(readable: true, writable: true, example: '/api/category/{id}')]
+    private ?Category $Category = null;
 
     #[ORM\OneToMany(mappedBy: 'housing', targetEntity: Like::class)]
     #[Groups(['housing_read'])]
@@ -188,10 +194,6 @@ class Housing
     #[Groups(['housing_read'])]
     private Collection $rentings;
 
-    #[ORM\Column]
-    #[Groups(['housing_read'])]
-    private ?\DateTimeImmutable $createdAt = null;
-
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -200,7 +202,7 @@ class Housing
         $this->rentings = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): ?Uuid
     {
         return $this->id;
     }
@@ -387,6 +389,18 @@ class Housing
     public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->Category;
+    }
+
+    public function setCategory(?Category $Category): self
+    {
+        $this->Category = $Category;
 
         return $this;
     }

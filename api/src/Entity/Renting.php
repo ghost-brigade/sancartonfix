@@ -13,6 +13,7 @@ use App\Repository\RentingRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: RentingRepository::class)]
 #[ApiResource(
@@ -51,7 +52,7 @@ class Renting
     #[ORM\Column]
     #[Groups(['renting_read'])]
     #[ApiProperty(identifier: true)]
-    private ?int $id = null;
+    private $id = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     #[Groups(['renting_read', 'renting_write'])]
@@ -78,7 +79,7 @@ class Renting
     #[ORM\OneToOne(mappedBy: 'renting', cascade: ['persist', 'remove'])]
     private ?Report $report = null;
 
-    public function getId(): ?int
+    public function getId(): ?Uuid
     {
         return $this->id;
     }
