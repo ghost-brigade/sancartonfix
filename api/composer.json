@@ -13,6 +13,7 @@
         "doctrine/doctrine-bundle": "^2.7",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.12",
+        "fakerphp/faker": "^1.21",
         "guzzlehttp/guzzle": "^7.4",
         "lexik/jwt-authentication-bundle": "^2.16",
         "nelmio/cors-bundle": "^2.2",
@@ -35,7 +36,8 @@
         "symfony/uid": "6.1.*",
         "symfony/validator": "6.1.*",
         "symfony/yaml": "6.1.*",
-        "symfonycasts/verify-email-bundle": "^1.13"
+        "symfonycasts/verify-email-bundle": "^1.13",
+        "tilleuls/forgot-password-bundle": "^1.4"
     },
     "require-dev": {
         "api-platform/schema-generator": "^4.0",

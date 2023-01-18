@@ -21,7 +21,13 @@ use Symfony\Component\Uid\Uuid;
     ],
     //security: 'object.getAccount() == user',
     //securityMessage: 'Only the user himself can access his registration token.',
-    uriTemplate: '/users/validate_account/{token}',
+    // change tags
+    openapiContext: [
+        'tags' => ['Register'],
+        'summary' => 'Validate a registration token.',
+        'description' => 'Validate a registration token.',
+    ],
+    uriTemplate: '/validate_account/{token}',
     controller: RegisterValidationController::class,
 )]
 class UserRegistrationToken
