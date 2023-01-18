@@ -2,6 +2,6 @@
 <h1>Welcome {{ user.email }}!</h1>
 
 <p>
-    <a href="{{ token }}">Click here to activate your account</a>
-    (this link is valid until {{ expirationDate|date('F jS') }})
+    <a href="{{ token }}">Click here to activate your account</a> or copy and paste this link into your browser:
+    {{ token }}
 </p>
