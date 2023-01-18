@@ -75,6 +75,19 @@ services:
       - target: 5432
         published: 5432
         protocol: tcp
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+       - pgadmin:/var/lib/pgadmin
+    ports:
+      - "${PGADMIN_PORT:-8080}:80"
+    restart: unless-stopped
+
   mailer:
     image: schickling/mailcatcher
     restart: unless-stopped
@@ -86,4 +99,5 @@ volumes:
   caddy_config:
   db_data:
   php_socket:
+  pgadmin:
 
