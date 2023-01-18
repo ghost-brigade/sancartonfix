@@ -14,6 +14,8 @@ use ApiPlatform\Metadata\Put;
 use App\Controller\User\RegisterController;
 use App\Controller\User\RegisterValidationController;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -72,7 +74,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user_read', 'user_write'])]
     #[ApiProperty(writable: true, readable: true, example: 'user@mydomain.com', description: 'The email of the user')]
     private ?string $email = null;
-
+    
     #[ORM\Column]
     #[Groups(['user_read', 'user_write'])]
     #[ApiProperty(writable: true, readable: true, example: ['ROLE_USER'], description: 'The roles of the user', security: 'is_granted("ROLE_ADMIN")')]
@@ -93,8 +95,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ApiProperty(writable: true, readable: false, example: 'password', description: 'The password of the user', required: false)]
     private ?string $plainPassword = null;
 
+    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Housing::class)]
+    private Collection $housings;
+
+    #[ORM\OneToMany(mappedBy: 'author', targetEntity: Like::class)]
+    private Collection $likes;
+
+    #[ORM\OneToMany(mappedBy: 'client', targetEntity: Renting::class)]
+    private Collection $rentings;
+
     #[ORM\Column]
     private ?bool $isVerified = false;
+
+    public function __construct()
+    {
+        $this->housings = new ArrayCollection();
+        $this->likes = new ArrayCollection();
+        $this->rentings = new ArrayCollection();
+    }
 
     public function getId(): ?Uuid
     {
@@ -187,4 +205,93 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Housing>
+     */
+    public function getHousings(): Collection
+    {
+        return $this->housings;
+    }
+
+    public function addHousing(Housing $housing): self
+    {
+        if (!$this->housings->contains($housing)) {
+            $this->housings->add($housing);
+            $housing->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHousing(Housing $housing): self
+    {
+        if ($this->housings->removeElement($housing)) {
+            // set the owning side to null (unless already changed)
+            if ($housing->getOwner() === $this) {
+                $housing->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Like>
+     */
+    public function getLikes(): Collection
+    {
+        return $this->likes;
+    }
+
+    public function addLike(Like $like): self
+    {
+        if (!$this->likes->contains($like)) {
+            $this->likes->add($like);
+            $like->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLike(Like $like): self
+    {
+        if ($this->likes->removeElement($like)) {
+            // set the owning side to null (unless already changed)
+            if ($like->getAuthor() === $this) {
+                $like->setAuthor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Renting>
+     */
+    public function getRentings(): Collection
+    {
+        return $this->rentings;
+    }
+
+    public function addRenting(Renting $renting): self
+    {
+        if (!$this->rentings->contains($renting)) {
+            $this->rentings->add($renting);
+            $renting->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRenting(Renting $renting): self
+    {
+        if ($this->rentings->removeElement($renting)) {
+            // set the owning side to null (unless already changed)
+            if ($renting->getClient() === $this) {
+                $renting->setClient(null);
+            }
+        }
+    }
+
 }

@@ -29,7 +29,6 @@ reset:
 install:
 	@echo "Installing dependencies..."
 	@docker-compose up -d
-	@cd api/
 	@cp .env.sample .env
 	@docker-compose exec php composer install
 	$(MAKE) db
