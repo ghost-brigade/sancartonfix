@@ -1,0 +1,18 @@
+[
+    {
+        "name": "Tente de luxe",
+        "description": "Le camping sauvage, mais en mieux ! Avec une vue imprenable sur les étoiles."
+    },
+    {
+        "name": "Banc confortable",
+        "description": "La solution idéale pour ceux qui aiment dormir en extérieur, mais préfèrent un peu plus de soutien pour le dos."
+    },
+    {
+        "name": "Ascenseur roulant",
+        "description": "Pour les amoureux de l'aventure et de la vie nocturne de la ville."
+    },
+    {
+        "name": "Refuge de fortune",
+        "description": "Pour les amateurs de bricolage et de vie en plein air, un abri de fortune peut être construit avec des matériaux de récupération."
+    }
+]
