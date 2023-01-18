@@ -11,8 +11,6 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
-use App\Controller\User\RegisterController;
-use App\Controller\User\RegisterValidationController;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -74,7 +72,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user_read', 'user_write'])]
     #[ApiProperty(writable: true, readable: true, example: 'user@mydomain.com', description: 'The email of the user')]
     private ?string $email = null;
-    
+
     #[ORM\Column]
     #[Groups(['user_read', 'user_write'])]
     #[ApiProperty(writable: true, readable: true, example: ['ROLE_USER'], description: 'The roles of the user', security: 'is_granted("ROLE_ADMIN")')]
