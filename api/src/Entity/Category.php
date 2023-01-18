@@ -2,22 +2,69 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['category_read']],
+    denormalizationContext: ['groups' => ['category_write']],
+)]
+#[Get(
+    normalizationContext: ['groups' => ['category_get', 'category_read']],
+    security: 'is_granted("ROLE_USER")',
+    securityMessage: 'Access denied.',
+)]
+#[GetCollection(
+    normalizationContext: ['groups' => ['category_cget', 'category_read']],
+    security: 'is_granted("ROLE_USER")',
+    securityMessage: 'Access denied.',
+)]
+#[Post(
+    denormalizationContext: ['groups' => ['category_post', 'category_write']],
+    security: 'is_granted("ROLE_ADMIN")',
+    securityMessage: 'Access denied.',
+)]
+#[Put(
+    denormalizationContext: ['groups' => ['category_put', 'category_write']],
+    security: 'is_granted("ROLE_ADMIN")',
+    securityMessage: 'Access denied.',
+)]
+#[Delete(
+    security: 'is_granted("ROLE_ADMIN")',
+    securityMessage: 'Access denied.',
+)]
+#[ApiFilter(
+    SearchFilter::class,
+    properties: [
+        'id' => 'exact',
+        'name' => 'word_start',
+    ]
+)]
 class Category
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['category_read'])]
+    #[ApiProperty(identifier: true)]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['category_read', 'category_write'])]
+    #[ApiProperty(readable: true, writable: true, example: 'Category name', required: true)]
     private ?string $name = null;
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Housing::class)]
