@@ -20,6 +20,7 @@ class UserFixtures extends Fixture
             $user->setEmail($data['email']);
             $user->setPassword($this->userPasswordHasher->hashPassword($user, $data['password']));
             $user->setRoles($data['roles']);
+            $user->setIsVerified($data['isVerified'] ?? false);
             $manager->persist($user);
         }
 

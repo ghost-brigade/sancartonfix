@@ -22,6 +22,12 @@ framework:
     php_errors:
         log: true
 
+    mailer:
+        envelope:
+            sender: 'no-reply@sancartonfix.mimso.net'
+        headers:
+            From: 'SanCartonFix <no-reply@sancartonfix.mimso.net>'
+
 when@test:
     framework:
         test: true

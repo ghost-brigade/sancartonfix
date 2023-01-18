@@ -9,7 +9,10 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Controller\User\RegisterController;
+use App\Controller\User\RegisterValidationController;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -38,14 +41,11 @@ use Symfony\Component\Validator\Constraints as Assert;
     security: 'is_granted("ROLE_ADMIN")',
     securityMessage: 'Only admins can access this resource.'
 )]
-/* Ajouter un systeme d'inscription a la place
 #[Post(
-    denormalizationContext:  ['groups' => ['user_post']],
-    security: 'is_granted("ROLE_ADMIN")',
-    securityMessage: 'Only admins can access this resource'
+    denormalizationContext:  ['groups' => ['user_post', 'user_write']],
 )]
-*/
 #[Put(
+    denormalizationContext: ['groups' => ['user_put', 'user_write']],
     security: 'is_granted("ROLE_ADMIN") or object == user',
     securityMessage: 'Only admins can edit users or the user himself'
 )]
@@ -103,6 +103,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: Renting::class)]
     private Collection $rentings;
+
+    #[ORM\Column]
+    private ?bool $isVerified = false;
 
     public function __construct()
     {
@@ -191,6 +194,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
+    public function isIsVerified(): ?bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Housing>
      */
@@ -277,7 +292,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $renting->setClient(null);
             }
         }
-
-        return $this;
     }
+
 }
