@@ -10,11 +10,11 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20230118094624 extends AbstractMigration
+final class Version20230118095801 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return '';
+        return 'base entities';
     }
 
     public function up(Schema $schema): void
@@ -45,6 +45,14 @@ final class Version20230118094624 extends AbstractMigration
         $this->addSql('COMMENT ON COLUMN renting.date_end IS \'(DC2Type:date_immutable)\'');
         $this->addSql('CREATE TABLE report (id INT NOT NULL, renting_id INT NOT NULL, content VARCHAR(255) NOT NULL, status BOOLEAN NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_C42F7784EC8CFBAF ON report (renting_id)');
+        $this->addSql('CREATE TABLE "user" (id UUID NOT NULL, email VARCHAR(180) NOT NULL, roles JSON NOT NULL, password VARCHAR(255) NOT NULL, is_verified BOOLEAN NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE UNIQUE INDEX UNIQ_8D93D649E7927C74 ON "user" (email)');
+        $this->addSql('COMMENT ON COLUMN "user".id IS \'(DC2Type:uuid)\'');
+        $this->addSql('CREATE TABLE user_registration_token (id UUID NOT NULL, account_id UUID NOT NULL, token VARCHAR(255) NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, active BOOLEAN NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE INDEX IDX_7CD9E7289B6B5FBA ON user_registration_token (account_id)');
+        $this->addSql('COMMENT ON COLUMN user_registration_token.id IS \'(DC2Type:uuid)\'');
+        $this->addSql('COMMENT ON COLUMN user_registration_token.account_id IS \'(DC2Type:uuid)\'');
+        $this->addSql('COMMENT ON COLUMN user_registration_token.created_at IS \'(DC2Type:datetime_immutable)\'');
         $this->addSql('ALTER TABLE housing ADD CONSTRAINT FK_FB8142C37E3C61F9 FOREIGN KEY (owner_id) REFERENCES "user" (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE housing ADD CONSTRAINT FK_FB8142C312469DE2 FOREIGN KEY (category_id) REFERENCES category (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE "like" ADD CONSTRAINT FK_AC6340B3F675F31B FOREIGN KEY (author_id) REFERENCES "user" (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
@@ -53,7 +61,7 @@ final class Version20230118094624 extends AbstractMigration
         $this->addSql('ALTER TABLE renting ADD CONSTRAINT FK_13533C0F19EB6921 FOREIGN KEY (client_id) REFERENCES "user" (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE renting ADD CONSTRAINT FK_13533C0FAD5873E3 FOREIGN KEY (housing_id) REFERENCES housing (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE report ADD CONSTRAINT FK_C42F7784EC8CFBAF FOREIGN KEY (renting_id) REFERENCES renting (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
-        $this->addSql('DROP TABLE city');
+        $this->addSql('ALTER TABLE user_registration_token ADD CONSTRAINT FK_7CD9E7289B6B5FBA FOREIGN KEY (account_id) REFERENCES "user" (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
     }
 
     public function down(Schema $schema): void
@@ -66,7 +74,6 @@ final class Version20230118094624 extends AbstractMigration
         $this->addSql('DROP SEQUENCE media_id_seq CASCADE');
         $this->addSql('DROP SEQUENCE renting_id_seq CASCADE');
         $this->addSql('DROP SEQUENCE report_id_seq CASCADE');
-        $this->addSql('CREATE TABLE city (postal_code INT NOT NULL, name VARCHAR(255) NOT NULL, latitude DOUBLE PRECISION DEFAULT NULL, longitude DOUBLE PRECISION DEFAULT NULL, PRIMARY KEY(postal_code))');
         $this->addSql('ALTER TABLE housing DROP CONSTRAINT FK_FB8142C37E3C61F9');
         $this->addSql('ALTER TABLE housing DROP CONSTRAINT FK_FB8142C312469DE2');
         $this->addSql('ALTER TABLE "like" DROP CONSTRAINT FK_AC6340B3F675F31B');
@@ -75,11 +82,14 @@ final class Version20230118094624 extends AbstractMigration
         $this->addSql('ALTER TABLE renting DROP CONSTRAINT FK_13533C0F19EB6921');
         $this->addSql('ALTER TABLE renting DROP CONSTRAINT FK_13533C0FAD5873E3');
         $this->addSql('ALTER TABLE report DROP CONSTRAINT FK_C42F7784EC8CFBAF');
+        $this->addSql('ALTER TABLE user_registration_token DROP CONSTRAINT FK_7CD9E7289B6B5FBA');
         $this->addSql('DROP TABLE category');
         $this->addSql('DROP TABLE housing');
         $this->addSql('DROP TABLE "like"');
         $this->addSql('DROP TABLE media');
         $this->addSql('DROP TABLE renting');
         $this->addSql('DROP TABLE report');
+        $this->addSql('DROP TABLE "user"');
+        $this->addSql('DROP TABLE user_registration_token');
     }
 }
