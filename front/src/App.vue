@@ -14,4 +14,3 @@ import MenuComponent from "./components/menu/MenuComponent.vue";
         <RouterView />
     </main>
 </template>
-
