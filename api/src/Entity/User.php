@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
@@ -56,6 +57,12 @@ use Symfony\Component\Validator\Constraints as Assert;
     properties: [
         'id' => 'exact',
         'email' => 'exact',
+    ]
+)]
+#[ApiFilter(
+    OrderFilter::class,
+    properties: [
+        'id',
     ]
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
