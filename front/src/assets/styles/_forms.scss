@@ -25,8 +25,20 @@ form {
         color: $error_color;
         font-size: 0.8rem;
     }
+
+    &.app-form_buttons {
+        gap: 0.5rem;
+    }
 }
 
+button {
+    width: 100%;
+    padding: 1rem 0.5rem;
+    border: 2px solid $text_color;
+    background-color: $background_color;
+    color: $text_color;
+    max-width: 600px;
+}
 button[type=submit], input[type=submit] {
     width: 100%;
     padding: 1rem 0.5rem;

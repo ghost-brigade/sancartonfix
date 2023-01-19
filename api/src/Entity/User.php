@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
@@ -21,6 +22,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Controller\User\SecurityController;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -33,6 +35,16 @@ use Symfony\Component\Validator\Constraints as Assert;
     normalizationContext: ['groups' => ['user_get', 'user_read']],
     security: 'is_granted("ROLE_ADMIN") or object == user',
     securityMessage: 'Only admins or yourself can access your user details.'
+)]
+#[GetCollection(
+    normalizationContext: ['groups' => ['user_get', 'user_read']],
+    openapiContext: [
+        'tags' => ['User'],
+        'summary' => 'Access your profile data.',
+        'description' => 'Access your profile data.',
+    ],
+    uriTemplate: '/profile',
+    controller: SecurityController::class,
 )]
 #[GetCollection(
     normalizationContext: ['groups' => ['user_cget', 'user_read']],
@@ -56,6 +68,12 @@ use Symfony\Component\Validator\Constraints as Assert;
     properties: [
         'id' => 'exact',
         'email' => 'exact',
+    ]
+)]
+#[ApiFilter(
+    OrderFilter::class,
+    properties: [
+        'id',
     ]
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -104,6 +122,43 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private ?bool $isVerified = false;
+
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 2, minMessage: 'Your firstname should be at least {{ limit }} characters',
+        max: 255, maxMessage: 'Your firstname should not be more than {{ limit }} characters'
+    )]
+    #[Groups(['user_read', 'user_write'])]
+    #[ApiProperty(writable: true, readable: true, example: 'Julien', description: 'The firstname of the user')]
+    private ?string $firstname = null;
+
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 2, minMessage: 'Your lastname should be at least {{ limit }} characters',
+        max: 255, maxMessage: 'Your lastname should not be more than {{ limit }} characters'
+    )]
+    #[Groups(['user_read', 'user_write'])]
+    #[ApiProperty(writable: true, readable: true, example: 'Bécile', description: 'The lastname of the user')]
+    private ?string $lastname = null;
+
+    #[ORM\Column]
+    #[Assert\NotBlank]
+    #[Assert\Type('boolean')]
+    #[Assert\Choice([true, false])]
+    #[Groups(['user_read', 'user_write'])]
+    #[ApiProperty(writable: true, readable: true, example: 'true', description: 'The gender of the user')]
+    private ?bool $gender = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Assert\NotBlank]
+    #[Assert\PositiveOrZero(
+        message: 'Your balance should be positive or zero'
+    )]
+    #[Groups(['user_read', 'user_write'])]
+    #[ApiProperty(writable: true, readable: true, example: 100.0, description: 'The balance of the user', securityPostDenormalize: 'is_granted("ROLE_ADMIN")')]
+    private ?float $balance = 0.0;
 
     public function __construct()
     {
@@ -290,6 +345,54 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $renting->setClient(null);
             }
         }
+    }
+
+    public function getFirstname(): ?string
+    {
+        return $this->firstname;
+    }
+
+    public function setFirstname(string $firstname): self
+    {
+        $this->firstname = $firstname;
+
+        return $this;
+    }
+
+    public function getLastname(): ?string
+    {
+        return $this->lastname;
+    }
+
+    public function setLastname(string $lastname): self
+    {
+        $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    public function isGender(): ?bool
+    {
+        return $this->gender;
+    }
+
+    public function setGender(bool $gender): self
+    {
+        $this->gender = $gender;
+
+        return $this;
+    }
+
+    public function getBalance(): ?float
+    {
+        return $this->balance;
+    }
+
+    public function setBalance(?float $balance): self
+    {
+        $this->balance = $balance;
+
+        return $this;
     }
 
 }
