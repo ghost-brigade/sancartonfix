@@ -16,12 +16,15 @@ class LikeFixtures extends Fixture implements DependentFixtureInterface
     private array $users = [];
     private array $housings = [];
 
+    private $user_count = 12;
+    private $housing_count = 4;
+
     private function populate(ObjectManager $manager): void
     {
-        for ($i = 0; $i < 12; $i++) {
+        for ($i = 0; $i < $this->user_count; $i++) {
             $this->users[] = $this->getReference(UserFixtures::REFERENCE . $i);
         }
-        for ($i = 0; $i < 4; $i++) {
+        for ($i = 0; $i < $this->housing_count; $i++) {
             $this->housings[] = $this->getReference(HousingFixtures::REFERENCE . $i);
         }
     }
