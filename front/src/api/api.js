@@ -2,14 +2,20 @@ class Api {
   static url = "https://localhost";
 
   async #fetchApi(url, method, data, jsonFormat = true) {
+    const headers = {
+      "Content-Type": "application/json",
+      "Accept": "application/ld+json",
+    }
+
+    const token = localStorage.getItem("token");
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+
     try {
       const response = await fetch(url.href, {
         method: method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          Accept: "application/ld+json",
-        },
+        headers: headers,
         body: data ? JSON.stringify(data) : null,
       });
 
