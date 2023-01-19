@@ -10,15 +10,19 @@ use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
+use App\Controller\MediaController;
 use App\Repository\MediaRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
+#[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: MediaRepository::class)]
-#[UniqueEntity('name', message: 'There is already a media with this name')]
+#[UniqueEntity('filePath', message: 'There is already a media with this name')]
 #[ApiResource(
     denormalizationContext: ['groups' => ['media_write']],
     normalizationContext: ['groups' => ['media_read']]
@@ -35,8 +39,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 #[Post(
     denormalizationContext:  ['groups' => ['media_post', 'media_write']],
-    security: 'is_granted("ROLE_USER") and object.getHousing().getOwner() == user',
-    securityMessage: 'Permission denied. You can only add media to your own housing.'
+    inputFormats: ['multipart' => ['multipart/form-data']],
+    security: 'is_granted("ROLE_USER")',
+    securityMessage: 'Permission denied. You can only add media to your own housing.',
+    securityPostDenormalize: 'is_granted("ROLE_USER") and object.getHousing().getOwner() == user',
+    securityPostDenormalizeMessage: 'You do not have permission to upload media to this housing.'
 )]
 #[Delete(
     security: 'is_granted("ROLE_USER") and object.getHousing().getOwner() == user',
@@ -46,7 +53,6 @@ use Symfony\Component\Validator\Constraints as Assert;
     SearchFilter::class,
     properties: [
         'id' => 'exact',
-        'name' => 'exact',
     ]
 )]
 class Media
@@ -59,36 +65,27 @@ class Media
     #[ApiProperty(identifier: true, writable: false, readable: true)]
     private $id = null;
 
-    #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
-    #[Assert\Length(min: 3, max: 255)]
-    #[Assert\Regex(
-        pattern: '/^[a-zA-Z0-9_\-\.]+$/',
-        message: 'The name can only contain letters, numbers, underscores, dashes and dots.'
-    )]
-    #[Groups(['media_read', 'media_write'])]
-    #[ApiProperty(writable: true, readable: true, required: false, example: 'MyImage.jpg', description: 'The name of the media file.')]
-    private ?string $name = null;
+    #[ApiProperty(types: ['https://schema.org/contentUrl'])]
+    #[Groups(['media_read'])]
+    public ?string $contentUrl = null;
+
+    #[Vich\UploadableField(mapping: "media", fileNameProperty: "filePath")]
+    #[Assert\NotNull]
+    #[Groups(['media_write'])]
+    public ?File $file = null;
+
+    #[ORM\Column(nullable: true)]
+    public ?string $filePath = null;
 
     #[ORM\ManyToOne(inversedBy: 'media')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Housing $housing = null;
+    #[Groups(['media_read', 'media_write'])]
+    #[ApiProperty(writable: true, readable: true, required: true, description: 'The housing this media belongs to.', example: '/housings/{id}')]
+    public ?Housing $housing = null;
 
     public function getId(): ?Uuid
     {
         return $this->id;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
     }
 
     public function getHousing(): ?Housing
