@@ -22,6 +22,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Controller\User\SecurityController;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -34,6 +35,16 @@ use Symfony\Component\Validator\Constraints as Assert;
     normalizationContext: ['groups' => ['user_get', 'user_read']],
     security: 'is_granted("ROLE_ADMIN") or object == user',
     securityMessage: 'Only admins or yourself can access your user details.'
+)]
+#[GetCollection(
+    normalizationContext: ['groups' => ['user_get', 'user_read']],
+    openapiContext: [
+        'tags' => ['User'],
+        'summary' => 'Access your profile data.',
+        'description' => 'Access your profile data.',
+    ],
+    uriTemplate: '/profile',
+    controller: SecurityController::class,
 )]
 #[GetCollection(
     normalizationContext: ['groups' => ['user_cget', 'user_read']],

@@ -5,3 +5,7 @@ controllers:
 authentication_token:
     path: /authentication_token
     methods: ['POST']
+
+profile:
+    path: /profile
+    methods: ['GET']
