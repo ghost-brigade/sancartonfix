@@ -42,7 +42,7 @@ use Symfony\Component\Uid\Uuid;
 )]
 //todo : peut etre faire un systeme d'annulation de reservation mais seulement 2j avant et envoyer un remboursement au proprio avec des frais d'annulation
 #[Delete(
-    security: 'is_granted("ROLE_ADMIN") or object.getClient() == user',
+    security: 'is_granted("ROLE_USER")',
     securityMessage: 'You are not allowed to access this resource.',
 )]
 class Renting

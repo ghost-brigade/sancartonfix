@@ -140,6 +140,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ApiProperty(writable: true, readable: true, example: 'true', description: 'The gender of the user')]
     private ?bool $gender = null;
 
+    #[ORM\Column(nullable: true)]
+    #[Assert\NotBlank]
+    #[Assert\PositiveOrZero(
+        message: 'Your balance should be positive or zero'
+    )]
+    #[Groups(['user_read', 'user_write'])]
+    #[ApiProperty(writable: true, readable: true, example: 100.0, description: 'The balance of the user', securityPostDenormalize: 'is_granted("ROLE_ADMIN")')]
+    private ?float $balance = 0.0;
+
     public function __construct()
     {
         $this->housings = new ArrayCollection();
@@ -359,6 +368,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setGender(bool $gender): self
     {
         $this->gender = $gender;
+
+        return $this;
+    }
+
+    public function getBalance(): ?float
+    {
+        return $this->balance;
+    }
+
+    public function setBalance(?float $balance): self
+    {
+        $this->balance = $balance;
 
         return $this;
     }
