@@ -1,14 +1,24 @@
 [
     {
-        "email":"admin@localhost",
-        "password":"password",
-        "roles":["ROLE_ADMIN"],
+        "firstname": "Julien",
+        "lastname": "Bélix",
+        "gender": true,
+        "email": "admin@localhost",
+        "password": "password",
+        "roles": [
+            "ROLE_ADMIN"
+        ],
         "is_verified": true
     },
     {
-        "email":"user@localhost",
-        "password":"password",
-        "roles":["ROLE_USER"],
+        "firstname": "Louis",
+        "lastname": "Sterix",
+        "gender": true,
+        "email": "user@localhost",
+        "password": "password",
+        "roles": [
+            "ROLE_USER"
+        ],
         "is_verified": true
     }
 ]

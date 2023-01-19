@@ -48,8 +48,9 @@ use Symfony\Component\Uid\Uuid;
 class Renting
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: 'uuid', unique: true)]
+    #[ORM\GeneratedValue(strategy: "CUSTOM")]
+    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     #[Groups(['renting_read'])]
     #[ApiProperty(identifier: true)]
     private $id = null;

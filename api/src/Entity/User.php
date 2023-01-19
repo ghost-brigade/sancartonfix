@@ -112,6 +112,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?bool $isVerified = false;
 
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 2, minMessage: 'Your firstname should be at least {{ limit }} characters',
+        max: 255, maxMessage: 'Your firstname should not be more than {{ limit }} characters'
+    )]
+    #[Groups(['user_read', 'user_write'])]
+    #[ApiProperty(writable: true, readable: true, example: 'Julien', description: 'The firstname of the user')]
+    private ?string $firstname = null;
+
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 2, minMessage: 'Your lastname should be at least {{ limit }} characters',
+        max: 255, maxMessage: 'Your lastname should not be more than {{ limit }} characters'
+    )]
+    #[Groups(['user_read', 'user_write'])]
+    #[ApiProperty(writable: true, readable: true, example: 'Bécile', description: 'The lastname of the user')]
+    private ?string $lastname = null;
+
+    #[ORM\Column]
+    #[Assert\NotBlank]
+    #[Assert\Type('boolean')]
+    #[Assert\Choice([true, false])]
+    #[Groups(['user_read', 'user_write'])]
+    #[ApiProperty(writable: true, readable: true, example: 'true', description: 'The gender of the user')]
+    private ?bool $gender = null;
+
     public function __construct()
     {
         $this->housings = new ArrayCollection();
@@ -297,6 +325,42 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $renting->setClient(null);
             }
         }
+    }
+
+    public function getFirstname(): ?string
+    {
+        return $this->firstname;
+    }
+
+    public function setFirstname(string $firstname): self
+    {
+        $this->firstname = $firstname;
+
+        return $this;
+    }
+
+    public function getLastname(): ?string
+    {
+        return $this->lastname;
+    }
+
+    public function setLastname(string $lastname): self
+    {
+        $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    public function isGender(): ?bool
+    {
+        return $this->gender;
+    }
+
+    public function setGender(bool $gender): self
+    {
+        $this->gender = $gender;
+
+        return $this;
     }
 
 }

@@ -14,6 +14,7 @@ use ApiPlatform\Metadata\Put;
 use App\Repository\ReportRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ReportRepository::class)]
@@ -57,11 +58,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Report
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: 'uuid', unique: true)]
+    #[ORM\GeneratedValue(strategy: "CUSTOM")]
+    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     #[Groups(['report_read'])]
     #[ApiProperty(identifier: true)]
-    private ?int $id = null;
+    private $id = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
@@ -90,7 +92,7 @@ class Report
     #[ApiProperty(readable: true, writable: true, required: true, example: '/api/rentings/1', description: 'The renting attached to the report')]
     private ?Renting $renting = null;
 
-    public function getId(): ?int
+    public function getId(): ?Uuid
     {
         return $this->id;
     }
