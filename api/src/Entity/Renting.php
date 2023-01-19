@@ -79,6 +79,12 @@ class Renting
     #[ORM\OneToOne(mappedBy: 'renting', cascade: ['persist', 'remove'])]
     private ?Report $report = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $status = false;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $price = null;
+
     public function getId(): ?Uuid
     {
         return $this->id;
@@ -145,6 +151,30 @@ class Renting
         }
 
         $this->report = $report;
+
+        return $this;
+    }
+
+    public function isStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(bool $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getPrice(): ?float
+    {
+        return $this->price;
+    }
+
+    public function setPrice(?float $price): self
+    {
+        $this->price = $price;
 
         return $this;
     }

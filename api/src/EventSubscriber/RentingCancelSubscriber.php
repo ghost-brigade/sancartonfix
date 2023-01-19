@@ -68,7 +68,7 @@ final class RentingCancelSubscriber implements EventSubscriberInterface
     public function refundToClient(Renting $renting): void
     {
         $user = $renting->getClient();
-        $amount = $renting->getHousing()->getPrice();
+        $amount = $renting->getPrice();
 
         $date    = new \DateTime();
         $minDate = $renting->getDateStart()->sub(new \DateInterval('P7D'));
