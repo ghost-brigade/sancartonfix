@@ -38,7 +38,8 @@
         "symfony/validator": "6.1.*",
         "symfony/yaml": "6.1.*",
         "symfonycasts/verify-email-bundle": "^1.13",
-        "tilleuls/forgot-password-bundle": "^1.4"
+        "tilleuls/forgot-password-bundle": "^1.4",
+        "vich/uploader-bundle": "^2.0"
     },
     "require-dev": {
         "api-platform/schema-generator": "^4.0",
