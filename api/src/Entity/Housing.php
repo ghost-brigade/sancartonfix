@@ -30,12 +30,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 #[GetCollection(
     normalizationContext: ['groups' => ['housing_cget', 'housing_read']],
-    security: 'is_granted("ROLE_ADMIN") or object.getOwner() == user',
+    security: 'is_granted("ROLE_USER")',
     securityMessage: 'You are not allowed to access this resource.',
 )]
 #[Get(
     normalizationContext: ['groups' => ['housing_get', 'housing_read']],
-    security: 'is_granted("ROLE_ADMIN") or object.getOwner() == user',
+    security: 'is_granted("ROLE_USER")',
     securityMessage: 'You are not allowed to access this resource.',
 )]
 #[Post(
