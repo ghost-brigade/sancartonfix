@@ -15,13 +15,16 @@ class HousingFixtures extends Fixture implements DependentFixtureInterface
     private array $users = [];
     private array $categories = [];
 
+    private int $user_count = 12;
+    private int $category_count = 4;
+
     private function populate(ObjectManager $manager): void
     {
-        for ($i = 0; $i < 12; $i++) {
+        for ($i = 0; $i < $this->user_count; $i++) {
             $this->users[] = $this->getReference(UserFixtures::REFERENCE . $i);
         }
 
-        for ($i = 0; $i < 4; $i++) {
+        for ($i = 0; $i < $this->category_count; $i++) {
             $this->categories[] = $this->getReference(CategoryFixtures::REFERENCE . $i);
         }
     }
@@ -60,15 +63,11 @@ class HousingFixtures extends Fixture implements DependentFixtureInterface
         $manager->flush();
     }
 
-    public function getDependencies()
+    public function getDependencies(): array
     {
         return [
             UserFixtures::class,
         ];
     }
 
-    public function getOrder()
-    {
-        return 30;
-    }
 }

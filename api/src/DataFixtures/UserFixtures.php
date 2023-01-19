@@ -56,12 +56,4 @@ class UserFixtures extends Fixture
         $manager->flush();
     }
 
-    public function getDependencies()
-    {
-    }
-
-    public function getOrder()
-    {
-        return 10;
-    }
 }

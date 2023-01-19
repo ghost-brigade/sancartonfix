@@ -59,8 +59,4 @@ class LikeFixtures extends Fixture implements DependentFixtureInterface
         ];
     }
 
-    public function getOrder(): int
-    {
-        return 60;
-    }
 }

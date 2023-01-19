@@ -28,8 +28,4 @@ class CategoryFixtures extends Fixture
         $manager->flush();
     }
 
-    public function getOrder()
-    {
-        return 20;
-    }
 }
