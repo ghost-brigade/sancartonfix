@@ -62,6 +62,6 @@ class UserFixtures extends Fixture
 
     public function getOrder()
     {
-        return 1;
+        return 10;
     }
 }

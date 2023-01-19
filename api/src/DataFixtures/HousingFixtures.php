@@ -10,6 +10,8 @@ use Faker\Factory;
 
 class HousingFixtures extends Fixture implements DependentFixtureInterface
 {
+    public const REFERENCE = 'housing-';
+
     private array $users = [];
     private array $categories = [];
 
@@ -35,7 +37,7 @@ class HousingFixtures extends Fixture implements DependentFixtureInterface
         shuffle($this->users);
         shuffle($this->categories);
 
-        foreach ($datas as $data) {
+        foreach ($datas as $key => $data) {
 
             $user = array_pop($this->users);
             $category = array_pop($this->categories);
@@ -51,6 +53,8 @@ class HousingFixtures extends Fixture implements DependentFixtureInterface
             $housing->setActive($faker->boolean);
 
             $manager->persist($housing);
+
+            $this->setReference(self::REFERENCE . $key, $housing);
         }
 
         $manager->flush();
@@ -65,6 +69,6 @@ class HousingFixtures extends Fixture implements DependentFixtureInterface
 
     public function getOrder()
     {
-        return 100;
+        return 30;
     }
 }
