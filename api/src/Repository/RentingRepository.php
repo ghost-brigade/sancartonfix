@@ -39,6 +39,17 @@ class RentingRepository extends ServiceEntityRepository
         }
     }
 
+    public function findRentingsToPay() : array
+    {
+        return $this->createQueryBuilder('r')
+            ->andWhere('r.status = :status')
+            ->andWhere('r.dateEnd < :dateLessSevenDays')
+            ->setParameter('status', false)
+            ->setParameter('dateLessSevenDays', new \DateTime('-7 days'))
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Renting[] Returns an array of Renting objects
 //     */

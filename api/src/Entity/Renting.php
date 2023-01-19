@@ -27,7 +27,7 @@ use Symfony\Component\Uid\Uuid;
 )]
 #[Get(
     normalizationContext: ['groups' => ['renting_get', 'renting_read']],
-    security: 'is_granted("ROLE_USER")',
+    security: 'is_granted("ROLE_USER") and object.getClient() == user',
     securityMessage: 'You are not allowed to access this resource.',
 )]
 #[Post(
@@ -37,12 +37,11 @@ use Symfony\Component\Uid\Uuid;
 )]
 #[Put(
     denormalizationContext: ['groups' => ['renting_put', 'renting_write']],
-    security: 'is_granted("ROLE_ADMIN") or object.getClient() == user',
+    security: 'is_granted("ROLE_ADMIN")',
     securityMessage: 'You are not allowed to access this resource.',
 )]
-//todo : peut etre faire un systeme d'annulation de reservation mais seulement 2j avant et envoyer un remboursement au proprio avec des frais d'annulation
 #[Delete(
-    security: 'is_granted("ROLE_ADMIN") or object.getClient() == user',
+    security: 'is_granted("ROLE_USER")',
     securityMessage: 'You are not allowed to access this resource.',
 )]
 class Renting
@@ -56,12 +55,12 @@ class Renting
     private $id = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
-    #[Groups(['renting_read', 'renting_write'])]
+    #[Groups(['renting_read', 'renting_write', 'housing_read'])]
     #[ApiProperty(example: '2021-01-01', openapiContext: ['format' => 'date'], readable: true, writable: true, required: true)]
     private ?\DateTimeImmutable $dateStart = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
-    #[Groups(['renting_read', 'renting_write'])]
+    #[Groups(['renting_read', 'renting_write', 'housing_read'])]
     #[ApiProperty(example: '2021-01-02', openapiContext: ['format' => 'date'], readable: true, writable: true, required: true)]
     private ?\DateTimeImmutable $dateEnd = null;
 
@@ -79,6 +78,12 @@ class Renting
 
     #[ORM\OneToOne(mappedBy: 'renting', cascade: ['persist', 'remove'])]
     private ?Report $report = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $status = false;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $price = null;
 
     public function getId(): ?Uuid
     {
@@ -146,6 +151,30 @@ class Renting
         }
 
         $this->report = $report;
+
+        return $this;
+    }
+
+    public function isStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(bool $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getPrice(): ?float
+    {
+        return $this->price;
+    }
+
+    public function setPrice(?float $price): self
+    {
+        $this->price = $price;
 
         return $this;
     }
