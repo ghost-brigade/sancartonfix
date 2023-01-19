@@ -17,6 +17,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
+
 #[ORM\Entity(repositoryClass: ReportRepository::class)]
 #[ApiResource(
     normalizationContext: ['groups' => ['report_read']],
@@ -57,6 +58,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 class Report
 {
+    const STATUS = [
+        'open' => 'open',
+        'validated' => 'validated',
+        'rejected' => 'rejected',
+    ];
+
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]
     #[ORM\GeneratedValue(strategy: "CUSTOM")]
@@ -82,9 +89,9 @@ class Report
     private ?string $content = null;
 
     #[ORM\Column]
-    #[Groups(['report_read', 'report_write'])]
-    #[ApiProperty(readable: true, writable: true, required: true, example: true, description: 'The status of the report')]
-    private ?bool $status = null;
+    #[Groups(['report_read', 'report_put'])]
+    #[ApiProperty(readable: true, writable: false, required: true, example: true, description: 'The status of the report', openapiContext: ['enum' => self::STATUS], securityPostDenormalize: 'is_granted("ROLE_ADMIN")')]
+    private ?string $status = null;
 
     #[ORM\OneToOne(inversedBy: 'report', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
@@ -109,12 +116,12 @@ class Report
         return $this;
     }
 
-    public function isStatus(): ?bool
+    public function getStatus(): ?string
     {
         return $this->status;
     }
 
-    public function setStatus(bool $status): self
+    public function setStatus(string $status): self
     {
         $this->status = $status;
 
