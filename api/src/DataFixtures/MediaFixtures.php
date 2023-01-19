@@ -32,7 +32,7 @@ class MediaFixtures extends Fixture implements DependentFixtureInterface
             $housing = $this->housings[0];
 
             $media = new Media();
-            $media->setName($data['name']);
+            //$media->setName($data['name']);
             $media->setHousing($housing);
 
             $manager->persist($media);
