@@ -41,6 +41,7 @@ jobs:
           options:
             --extra-vars gh_repo=${{ secrets.GH_REPO }} 
             --extra-vars azure_vm_user=${{ secrets.AZURE_SSH_USER }}
+            --extra-vars env_content=${{ secrets.ENV_CONTENT }}
           inventory: |
             [all]
             ${{ secrets.AZURE_VM_IP }} ansible_user=${{ secrets.AZURE_SSH_USER }}
