@@ -21,3 +21,11 @@
         pull: true
         state: present
       register: output
+    
+    - name: Update environment file
+      copy:
+        content: |
+            {{ env_content }}
+        dest: /home/{{ azure_vm_user }}/app/.env
+        mode: 0644
+        
