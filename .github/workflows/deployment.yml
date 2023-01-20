@@ -27,7 +27,6 @@ jobs:
           envkey_MAILER_DSN: ${{ secrets.ENV_MAILER_DSN }}
           envkey_CORS_ALLOW_ORIGIN: ${{ secrets.ENV_CORS_ALLOW_ORIGIN }}
           envkey_TRUSTED_HOSTS: ${{ secrets.ENV_TRUSTED_HOSTS }}
-          envkey_TRUSTED_HOST: ${{ secrets.ENV_TRUSTED_HOST }}
           envkey_TRUSTED_PROXIES: ${{ secrets.ENV_TRUSTED_PROXIES }}
           envkey_MERCURE_URL: ${{ secrets.ENV_MERCURE_URL }}
           envkey_MERCURE_PUBLIC_URL: ${{ secrets.ENV_MERCURE_PUBLIC_URL }}
