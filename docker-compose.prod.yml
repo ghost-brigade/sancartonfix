@@ -6,14 +6,13 @@ services:
     restart: unless-stopped
     depends_on:
       - php
-      - pwa
     volumes:
       - caddy_data:/data
       - caddy_config:/config
       - caddy_log:/var/log/caddy
       - php_socket:/var/run/php
     environment:
-      PWA_UPSTREAM: pwa:3000
+      #PWA_UPSTREAM: pwa:3000
       SERVER_NAME: api.sancartonfix.mimso.net, caddy:80
       MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
       MERCURE_SUBSCRIBER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
@@ -27,8 +26,6 @@ services:
       - target: 443
         published: ${HTTP3_PORT:-443}
         protocol: udp
-    networks:
-      - global
 
   php:
     image: ghcr.io/ghost-brigade/sancartonfix-php:latest
@@ -36,9 +33,9 @@ services:
     depends_on:
       - database
     environment:
-      DATABASE_URL: ${DATABASE_URL:-mysql://root:root@database:3306/app}
+      DATABASE_URL: ${DATABASE_URL:-postgresql://app:password@database:3306/app}
       TRUSTED_PROXIES: ${TRUSTED_PROXIES:-127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16}
-      TRUSTED_HOSTS: ^api.sancartonfix.mimso.net|localhost|caddy$$
+      TRUSTED_HOSTS: ^sancartonfix.mimso.net|api.sancartonfix.mimso.net|localhost|caddy$$
       MERCURE_URL: ${CADDY_MERCURE_URL:-http://caddy/.well-known/mercure}
       MERCURE_PUBLIC_URL: https://api.sancartonfix.mimso.net/.well-known/mercure
       MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
@@ -49,23 +46,16 @@ services:
       timeout: 3s
       retries: 3
       start_period: 30s
-    networks:
-      - global
 
-  pwa:
-    build:
-      context: ./pwa
-      target: prod
+  database:
+    image: postgres:${POSTGRES_VERSION:-14}-alpine
     restart: unless-stopped
     volumes:
-      - ./pwa:/srv/app
+      - db_data:/var/lib/postgresql/data
     environment:
-      API_PLATFORM_CREATE_CLIENT_ENTRYPOINT: http://caddy
-      API_PLATFORM_CREATE_CLIENT_OUTPUT: .
-
-networks:
-  global:
-    external: true
+      - POSTGRES_DB=${POSTGRES_DB:-app}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
+      - POSTGRES_USER=${POSTGRES_USER:-app}
 
 volumes:
   caddy_data:
