@@ -13,6 +13,12 @@
   become: true
   gather_facts: false
   tasks:
+    - name: Update environment file
+      copy:
+        src: "{{ github_workspace }}/.env.prod"
+        dest: /home/{{ azure_vm_user }}/app/.env
+        mode: 0644
+    
     - name: Create and pull compose services
       community.docker.docker_compose:
         project_src: /home/{{ azure_vm_user }}/app
@@ -21,11 +27,4 @@
         pull: true
         state: present
       register: output
-    
-    - name: Update environment file
-      copy:
-        content: |
-            {{ env_content }}
-        dest: /home/{{ azure_vm_user }}/app/.env
-        mode: 0644
         
