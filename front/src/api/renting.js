@@ -1,9 +1,9 @@
 import { Api } from "@/api/api";
 
-class Category extends Api {
+class Renting extends Api {
   constructor() {
     super();
-    this.path = "/categories";
+    this.path = "/rentings";
   }
 
   async findAll(page = 1, itemsPerPage = 20, filters = [], orders = {}) {
@@ -27,4 +27,4 @@ class Category extends Api {
   }
 }
 
-export { Category };
+export { Renting };

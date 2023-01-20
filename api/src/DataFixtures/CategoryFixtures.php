@@ -15,14 +15,14 @@ class CategoryFixtures extends Fixture
 
         $datas = json_decode(file_get_contents(__DIR__ . '/data/categories.json'), true);
 
-        foreach ($datas as $key => $data) {
+        foreach ($datas as $data) {
 
             $category = new Category();
             $category->setName($data['name']);
 
             $manager->persist($category);
 
-            $this->setReference(self::REFERENCE . $key, $category);
+            $this->setReference(self::REFERENCE . $category->getName(), $category);
         }
 
         $manager->flush();
