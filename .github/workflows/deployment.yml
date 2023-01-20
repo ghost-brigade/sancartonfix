@@ -6,8 +6,7 @@ on:
 
 env:
   ansible_path: ./ansible
-  user: azure_t01423
-
+  
 jobs:
   deploy:
     name: Deploy to Azure VM
@@ -28,7 +27,8 @@ jobs:
           key: ${{secrets.AZURE_SSH_KEY}}
           inventory: |
             [all]
-            ${{secrets.AZURE_VM_IP}} ansible_user=${{ env.user }}
+            ${{ secrets.AZURE_VM_IP }} ansible_user=${{ secrets.AZURE_SSH_USER }}
+            
             [azure_vm:vars]
             ansible_python_interpreter=/usr/bin/python3
             
@@ -38,8 +38,12 @@ jobs:
           playbook: azure-vm-update.yml
           directory: ${{ env.ansible_path }}
           key: ${{secrets.AZURE_SSH_KEY}}
+          options:
+            --extra-vars gh_repo=${{ secrets.GH_REPO }} 
+            --extra-vars azure_vm_user=${{ secrets.AZURE_SSH_USER }}
           inventory: |
             [all]
-            ${{secrets.AZURE_VM_IP}} ansible_user=${{ env.user }}
+            ${{ secrets.AZURE_VM_IP }} ansible_user=${{ secrets.AZURE_SSH_USER }}
+            
             [azure_vm:vars]
             ansible_python_interpreter=/usr/bin/python3

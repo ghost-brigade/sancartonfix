@@ -3,8 +3,8 @@
   tasks:
     - name: Clone a github repository
       git:
-        repo: https://github.com/ghost-brigade/sancartonfix.git
-        dest: /home/azure_t01423/app
+        repo: https://github.com/{{ gh_repo }}.git
+        dest: /home/{{ azure_vm_user }}/app
         clone: yes
         update: yes
 
@@ -15,8 +15,9 @@
   tasks:
     - name: Create and pull compose services
       community.docker.docker_compose:
-        project_src: /home/azure_t01423/app
-        file: docker-compose.prod.yml
+        project_src: /home/{{ azure_vm_user }}/app
+        files:
+          - docker-compose.prod.yml
         pull: true
         state: present
       register: output
