@@ -16,6 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: LikeRepository::class)]
 #[ORM\Table(name: '`like`')]
@@ -77,8 +78,9 @@ class Like
     #[ORM\ManyToOne(inversedBy: 'likes')]
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\NotNull]
-    #[Groups(['like_read', 'like_write'])]
-    #[ApiProperty(writable: true, readable: true, required: true, example: '/api/users/{id}', description: 'The user who liked the housing.')]
+    #[Groups(['like_read'])]
+    #[ApiProperty(writable: false, readable: true, required: true, example: '/api/users/{id}', description: 'The user who liked the housing.')]
+    #[Gedmo\Blameable(on: 'create')]
     private ?User $author = null;
 
     #[ORM\ManyToOne(inversedBy: 'likes')]

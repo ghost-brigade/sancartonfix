@@ -26,3 +26,10 @@ services:
     App\OpenApi\JwtDecorator:
         decorates: 'api_platform.openapi.factory'
         arguments: [ '@.inner' ]
+        
+    gedmo.listener.sluggable:
+        class: Gedmo\Sluggable\SluggableListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+        calls:
+            - [ setAnnotationReader, [ "@annotation_reader" ] ]

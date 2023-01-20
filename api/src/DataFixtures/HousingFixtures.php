@@ -31,11 +31,11 @@ class HousingFixtures extends Fixture implements DependentFixtureInterface
 
         $faker = Factory::create('fr_FR');
 
-        shuffle($this->users);
 
         foreach ($datas as $key => $data) {
 
-            $user = array_pop($this->users);
+            $user = $this->users[array_rand($this->users)];
+
             $category = $this->getReference(CategoryFixtures::REFERENCE . $data['category']);
 
             $housing = new Housing();
@@ -54,6 +54,7 @@ class HousingFixtures extends Fixture implements DependentFixtureInterface
         }
 
         $manager->flush();
+
     }
 
     public function getDependencies(): array

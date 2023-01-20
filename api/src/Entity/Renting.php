@@ -14,6 +14,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: RentingRepository::class)]
 #[ApiResource(
@@ -66,8 +67,9 @@ class Renting
 
     #[ORM\ManyToOne(inversedBy: 'rentings')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['renting_read', 'renting_write'])]
-    #[ApiProperty(readable: true, writable: true, required: true, example: '/api/users/{id}')]
+    #[Groups(['renting_read'])]
+    #[ApiProperty(readable: true, writable: false, required: true, example: '/api/users/{id}')]
+    #[Gedmo\Blameable(on: 'create')]
     private ?User $client = null;
 
     #[ORM\ManyToOne(inversedBy: 'rentings')]
