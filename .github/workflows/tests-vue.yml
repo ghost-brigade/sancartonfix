@@ -7,6 +7,9 @@ on:
     branches:
       - '*'
       - '!master'
+    paths:
+      - 'front/**'
+      - '.github/workflows/tests-vue.yml'
 
 defaults:
   run:
@@ -14,6 +17,7 @@ defaults:
 
 jobs:
   tests:
+    name: Tests - Frontend
     runs-on: ubuntu-latest
     steps:
     

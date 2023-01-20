@@ -1,15 +1,45 @@
-name: Deployment
+name: Azure VM Update
 
 on:
-  workflow_call: ~
   workflow_dispatch: ~
+  workflow_call: ~
+
+env:
+  ansible_path: ./ansible
+  user: azure_t01423
 
 jobs:
   deploy:
-    name: Redeploy webhook call
+    name: Deploy to Azure VM
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy docker container webhook
-        uses: joelwmale/webhook-action@master
+      - uses: actions/checkout@v2
+
+      - uses: kielabokkie/ssh-key-and-known-hosts-action@v1
         with:
-          url: ${{ secrets.WEBHOOK_URL }}
+          ssh-private-key: ${{ secrets.AZURE_SSH_KEY }}
+          ssh-host: ${{secrets.AZURE_VM_IP}}
+
+      - name: Install docker and docker compose
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          playbook: docker/main.yml
+          directory: ${{ env.ansible_path }}
+          key: ${{secrets.AZURE_SSH_KEY}}
+          inventory: |
+            [all]
+            ${{secrets.AZURE_VM_IP}} ansible_user=${{ env.user }}
+            [azure_vm:vars]
+            ansible_python_interpreter=/usr/bin/python3
+            
+      - name: Update docker compose image
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          playbook: azure-vm-update.yml
+          directory: ${{ env.ansible_path }}
+          key: ${{secrets.AZURE_SSH_KEY}}
+          inventory: |
+            [all]
+            ${{secrets.AZURE_VM_IP}} ansible_user=${{ env.user }}
+            [azure_vm:vars]
+            ansible_python_interpreter=/usr/bin/python3
