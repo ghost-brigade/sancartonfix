@@ -33,7 +33,8 @@ class Api {
 
     if (filters.length > 0) {
       filters.forEach((filter) => {
-        const property = filters?.length > 1 ? `${filter.property}[]` : filter.property;
+        const property =
+          filters?.length > 1 ? `${filter.property}[]` : filter.property;
         url.searchParams.append(property, filter?.value);
       });
     }
