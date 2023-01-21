@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
@@ -17,6 +18,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 #[ApiResource(
@@ -30,8 +33,8 @@ use Symfony\Component\Uid\Uuid;
 )]
 #[GetCollection(
     normalizationContext: ['groups' => ['category_cget', 'category_read']],
-    security: 'is_granted("ROLE_USER")',
-    securityMessage: 'Access denied.',
+    //security: 'is_granted("ROLE_USER")',
+    //securityMessage: 'Access denied.',
 )]
 #[Post(
     denormalizationContext: ['groups' => ['category_post', 'category_write']],
@@ -52,7 +55,16 @@ use Symfony\Component\Uid\Uuid;
     properties: [
         'id' => 'exact',
         'name' => 'word_start',
+        'slug' => 'exact',
     ]
+)]
+#[ApiFilter(
+    OrderFilter::class,
+    properties: [
+        'id',
+        'name',
+        'slug',
+    ],
 )]
 class Category
 {
@@ -66,8 +78,19 @@ class Category
 
     #[ORM\Column(length: 255)]
     #[Groups(['category_read', 'category_write'])]
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 3, minMessage: 'The name must be at least 3 characters long',
+        max: 255, maxMessage: 'The name cannot be longer than 255 characters',
+    )]
     #[ApiProperty(readable: true, writable: true, example: 'Category name', required: true)]
     private ?string $name = null;
+
+    #[ORM\Column(length: 128, unique: true)]
+    #[Groups(['category_read'])]
+    #[Gedmo\Slug(fields: ['name'], unique: true)]
+    #[ApiProperty(identifier: true, readable: true, writable: false)]
+    private $slug;
 
     #[ORM\OneToMany(mappedBy: 'Category', targetEntity: Housing::class)]
     private Collection $housings;
@@ -90,6 +113,18 @@ class Category
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }
