@@ -17,6 +17,7 @@
     "@fortawesome/vue-fontawesome": "^3.0.2",
     "pinia": "^2.0.28",
     "sass": "^1.57.1",
+    "v-calendar": "^3.0.0-alpha.8",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6"
   },

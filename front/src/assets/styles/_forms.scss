@@ -45,9 +45,12 @@ button[type=submit], input[type=submit] {
     border: 0;
     background-color: $main_color;
     color: white;
-    
+
     &:focus {
         outline: none;
         border-color: $main_color;
     }
+}
+button:hover {
+    cursor: pointer;
 }

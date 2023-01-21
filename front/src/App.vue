@@ -7,8 +7,9 @@ import SecurityProvider from "./providers/SecurityProvider.vue";
 <template>
     <SecurityProvider>
         <header class="app-header">
-            <img src="./assets/images/logo.png" alt="logo" />
-            <img src="./assets/images/logo_text.png" alt="SanCartonFix" />
+            <a href="/"><img src="./assets/images/logo.png" alt="logo" /></a>
+            <a href="/"><img src="./assets/images/logo_text.png" alt="SanCartonFix" /></a>
+
             <MenuHeader />
         </header>
 

@@ -60,12 +60,12 @@ class Category
     #[ORM\Column(type: 'uuid', unique: true)]
     #[ORM\GeneratedValue(strategy: "CUSTOM")]
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
-    #[Groups(['category_read'])]
+    #[Groups(['category_read', 'housing_read'])]
     #[ApiProperty(identifier: true)]
     private $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['category_read', 'category_write'])]
+    #[Groups(['category_read', 'category_write', 'housing_read'])]
     #[ApiProperty(readable: true, writable: true, example: 'Category name', required: true)]
     private ?string $name = null;
 

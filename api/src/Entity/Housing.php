@@ -62,6 +62,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
         'longitude' => 'exact',
         'category.name' => 'exact',
         'owner' => 'exact',
+        'slug' => 'exact',
+        'rentings.status' => 'exact',
     ]
 )]
 #[ApiFilter(
@@ -168,8 +170,8 @@ class Housing
 
     #[ORM\Column(length: 128, unique: true)]
     #[Groups(['housing_read'])]
-    #[Gedmo\Slug(fields: ['name'], unique: true)]
-    #[ApiProperty(identifier: true, readable: true, writable: false)]
+    #[Gedmo\Slug(fields: ['name', 'createdAt'], unique: true)]
+    #[ApiProperty(identifier: false, readable: true, writable: false)]
     private $slug;
 
     #[ORM\ManyToOne(inversedBy: 'housings')]
