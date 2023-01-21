@@ -1,11 +1,11 @@
 <script setup>
-import {ref} from 'vue';
+import {onMounted, ref} from 'vue';
 import { Category } from '@/api/category';
 
 const category = ref({});
 const city = ref('');
 
-async function getData() {
+onMounted(async () => {
     const categoryApi = new Category();
 
     category.value = await categoryApi.findAll({
@@ -13,9 +13,7 @@ async function getData() {
     }).then((response) => {
         return response["hydra:member"];
     });
-}
-
-getData();
+});
 
 const submit = () => {
     if (!category.value || !city.value) {
@@ -31,7 +29,8 @@ const submit = () => {
         <h2>Trouver mon logement</h2>
 
         <div class="app-form_row">
-            <select v-model="category">
+            <select v-model="category.value">
+                <option :value="null" :disabled="true" selected>Choisir une catégorie</option>
                 <option
                     v-for="category in category"
                     :key="category.id"
