@@ -20,6 +20,15 @@ const routes = [
     }
   },
   {
+    path: "/profile/renting",
+    name: "profile-renting",
+    component: () => import("../views/profile/RentingView.vue"),
+    meta: {
+      requiresAuth: true,
+      roles: [],
+    }
+  },
+  {
     path: "/profile",
     name: "profile",
     component: () => import("../views/ProfileView.vue"),
@@ -42,13 +51,13 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem("token");
-  
+
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (!token) {
       next({
         path: "/login",
         query: {
-          redirect: to.fullPath 
+          redirect: to.fullPath
         },
       });
     } else {
