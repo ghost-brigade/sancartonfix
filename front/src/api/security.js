@@ -9,7 +9,12 @@ class Security extends Api {
     async token(data, jsonFormat = true) {
         try {
           const returned = await this.post(`${this.path}authentication_token`, data, jsonFormat);
-          const res = await returned.json();
+
+          if (returned === null) {
+            throw new Error("Error while getting token, please retry later");
+          }
+
+          const res = await returned?.json();
 
           if(returned.ok) {
             const token = res.token;
