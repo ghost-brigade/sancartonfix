@@ -2,10 +2,15 @@
 
 import {Housing} from '../api/housing.js';
 import {ref} from 'vue';
-import { useRoute } from 'vue-router'
+import {useRoute} from 'vue-router'
+import {Calendar, DatePicker} from "v-calendar";
+import 'v-calendar/dist/style.css';
 
 const housing = ref([]);
-const { slug } = useRoute().params;
+const disabledDays = ref([]);
+const date = ref(null);
+
+const {slug} = useRoute().params;
 
 async function getData() {
     const filters = [
@@ -15,6 +20,15 @@ async function getData() {
     const housingApi = new Housing();
     const response = await housingApi.findAll(1, 20, filters);
     housing.value = response['hydra:member'][0];
+
+    disabledDays.value = housing.value.rentings.map(renting => {
+        console.log(renting)
+        return {
+            start: new Date(renting.dateStart),
+            end: new Date(renting.dateEnd)
+        }
+    });
+    console.log(disabledDays.value)
 }
 
 getData()
@@ -26,6 +40,9 @@ function rentThisHousing() {
 </script>
 
 <template>
+    <div v-for="a in disabledDays.value">
+        <p>{{ a }}</p>
+    </div>
     <div v-if="housing">
         <h1 v-if="housing.name">{{ housing.name }}</h1>
         <img v-for="image in housing.media"
@@ -41,10 +58,45 @@ function rentThisHousing() {
 
         <h3 v-if="housing.longitude">Créé le : {{ new Date(housing.createdAt).toLocaleString() }}</h3>
 
+        <DatePicker v-model="date"
+                    :disabled-dates="disabledDays.value"
+                    is-range
+                    @input="selectRange" @change="submitRange"
+        />
+
         <button @click="rentThisHousing()">Réserver</button>
+
+
     </div>
 
     <p v-else>Aucun logement n'a été trouvé.</p>
 </template>
 
+<script>
+import {ref} from "vue";
+
+export default {
+    name: "HousingView",
+    setup() {
+        const date = ref(null);
+        return {date}
+    },
+    // data() {
+    //     return {
+    //         disabledDays: []
+    //     }
+    // },
+    // mounted() {
+    //
+    // },
+    methods: {
+        selectRange(date) {
+            console.log(`Selected range: ${date.start} - ${date.end}`)
+        },
+        submitRange() {
+            console.log(`Submitted range: ${this.date.start} - ${this.date.end}`)
+        }
+    }
+}
+</script>
 
