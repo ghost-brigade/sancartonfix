@@ -6,19 +6,29 @@ class Security extends Api {
       this.path = "/";
     }
 
-    async token(data) {
-        const returned = await this.post(`${this.path}authentication_token`, data);
+    async token(data, jsonFormat = true) {
+        try {
+          const returned = await this.post(`${this.path}authentication_token`, data, jsonFormat);
+          const res = await returned.json();
 
-        const token = returned.token;
-        if (token) {
-            localStorage.setItem("token", token);
+          if(returned.ok) {
+            const token = res.token;
+
+            if (token) {
+              localStorage.setItem("token", token);
+            }
+
+            return token;
+          }
+
+          throw new Error(res.message);
+        } catch (err) {
+          throw new Error(err);
         }
-
-        return token;
     }
 
     async profile() {
-        return await this.get(`${this.path}profile`);
+        return await this.get(`${this.path}profile`, );
     }
 
 }
