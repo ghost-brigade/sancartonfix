@@ -20,8 +20,8 @@ class Users extends Api {
     return await this.post(this.path, data);
   }
 
-  async update(id, data) {
-    return await this.put(`${this.path}/${id}`, data);
+  async update(id, data, jsonFormat = true) {
+    return await this.put(`${this.path}/${id}`, data, jsonFormat);
   }
 
   async delete(id) {
@@ -33,7 +33,7 @@ class Users extends Api {
   }
 
   /**
-   * @param {"email": "value"} data 
+   * @param {"email": "value"} data
    * @returns 204
    */
   async forgotPassword(data) {
@@ -44,7 +44,7 @@ class Users extends Api {
    * @param {string} token
    * @param {"password": "value"} data
    * @returns 204
-   * 
+   *
    */
   async resetPassword(token, data) {
     return await this.post(`${this.forgotPasswordPath}/${token}`, data);

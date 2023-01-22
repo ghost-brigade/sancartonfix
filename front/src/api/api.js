@@ -65,10 +65,10 @@ class Api {
     }
   }
 
-  async put(path, data) {
+  async put(path, data, jsonFormat = true) {
     const url = new URL(Api.url + path);
     try {
-      return await this.#fetchApi(url, "PUT", data);
+      return await this.#fetchApi(url, "PUT", data, jsonFormat);
     } catch (err) {
       throw new Error("Error while modifying data");
     }
