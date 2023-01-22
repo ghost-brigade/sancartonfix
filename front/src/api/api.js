@@ -4,8 +4,8 @@ class Api {
   async #fetchApi(url, method, data, jsonFormat = true) {
     const headers = {
       "Content-Type": "application/json",
-      "Accept": "application/ld+json",
-    }
+      Accept: "application/ld+json",
+    };
 
     const token = localStorage.getItem("token");
     if (token) {
@@ -50,16 +50,16 @@ class Api {
     const url = this.#buildUrl(path, page, itemsPerPage, filters, orders);
 
     try {
-      return await this.#fetchApi(url, "GET");
+      return await this.#fetchApi(url, "GET", false);
     } catch (err) {
       throw new Error("Error while getting data");
     }
   }
 
-  async post(path, data) {
+  async post(path, data, jsonFormat = true) {
     const url = new URL(Api.url + path);
     try {
-      return await this.#fetchApi(url, "POST", data);
+      return await this.#fetchApi(url, "POST", data, jsonFormat);
     } catch (err) {
       throw new Error("Error while sending data");
     }
