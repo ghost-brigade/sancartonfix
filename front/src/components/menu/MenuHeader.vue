@@ -19,6 +19,7 @@ const toggleOpened = () => {
             <RouterLink to="/">Accueil</RouterLink>
             <RouterLink to="/about">Contact</RouterLink>
             <RouterLink :to="{ name: 'profile-renting' }">Mes locations</RouterLink>
+            <RouterLink :to="{ name: 'profile-housing' }">Mes logements</RouterLink>
             <RouterLink to="/profile">Compte</RouterLink>
         </nav>
     </div>

@@ -37,9 +37,9 @@ const handlePageChange = (newPage) => {
         <ul v-for="renting in rentings" :key="renting.id">
             <li>
                 <img
-                    :src="
-                        'https://localhost/' +
-                        renting?.housing?.media?.contentUrl
+                    :src="housing?.media?.contentUrl === undefined
+                            ? '/image/housing/default.jpg'
+                            : 'https://localhost/' + housing?.media?.contentUrl
                     "
                     :alt="renting?.housing?.slug + '-img'"
                 />
