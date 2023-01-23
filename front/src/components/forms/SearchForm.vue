@@ -11,6 +11,8 @@ onMounted(async () => {
     category.value = await categoryApi.findAll({
         orders: { property: "name", direction: "ASC" },
     }).then((response) => {
+        return response.json();
+    }).then((response) => {
         return response["hydra:member"];
     });
 });

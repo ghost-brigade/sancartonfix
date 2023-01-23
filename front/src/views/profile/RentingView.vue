@@ -11,15 +11,25 @@ const page = ref(1);
 
 async function getData() {
     const rentingApi = new Renting();
-    const data = await rentingApi.findAll({
-        page: page.value,
-        itemsPerPage: 5,
-        orders: { property: "createdAt", direction: "DESC" },
-    });
 
-    rentings.value = data["hydra:member"];
-    items.value = data["hydra:totalItems"];
-    views.value = data["hydra:view"];
+    try {
+        const data = await rentingApi.findAll({
+            page: page.value,
+            itemsPerPage: 5,
+            orders: { property: "createdAt", direction: "DESC" },
+        }).then((response) => {
+            if(response.ok) {
+                return response.json();
+            }
+            throw new Error("Une erreur est survenue lors de la récupération des données");
+        });
+
+        rentings.value = data["hydra:member"];
+        items.value = data["hydra:totalItems"];
+        views.value = data["hydra:view"];
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 getData();
@@ -37,9 +47,9 @@ const handlePageChange = (newPage) => {
         <ul v-for="renting in rentings" :key="renting.id">
             <li>
                 <img
-                    :src="housing?.media?.contentUrl === undefined
+                    :src="renting?.housing?.media?.contentUrl === undefined
                             ? '/image/housing/default.jpg'
-                            : 'https://localhost/' + housing?.media?.contentUrl
+                            : 'https://localhost/' + renting?.housing?.media?.contentUrl
                     "
                     :alt="renting?.housing?.slug + '-img'"
                 />

@@ -2,8 +2,10 @@
 import { ref, inject } from "vue";
 import { Housing } from "@/api/housing";
 import { SECURITY_currentUser } from "@/providers/ProviderKeys";
+import {useRouter} from "vue-router";
 const { currentUser } = inject(SECURITY_currentUser);
 
+const $router = useRouter();
 const housings = ref({});
 const items = ref(0);
 const views = ref({});
@@ -18,6 +20,11 @@ async function getData() {
             itemsPerPage: 5,
             filters: [{ property: 'owner', value: currentUser?.id }],
             orders: { property: "createdAt", direction: "DESC" },
+        }).then((response) => {
+            if(response.ok) {
+                return response.json();
+            }
+            throw new Error("Une erreur est survenue lors de la récupération des données");
         });
 
         housings.value = data["hydra:member"];
@@ -34,6 +41,10 @@ const handlePageChange = (newPage) => {
     page.value = newPage;
     getData();
 };
+
+const handleEditHousing = (id) => {
+    $router.push({ name: "profile-housing-edit", params: { id: id } });
+}
 </script>
 
 <template>
@@ -53,6 +64,9 @@ const handlePageChange = (newPage) => {
                 <span>Status: {{ housing?.active ? 'Actif' : 'Innactif' }}</span><br>
                 <span>Prix: {{ housing?.price }} EUR</span>
             </li>
+            <div :style="{textAlign: 'left', marginTop: '1rem', }">
+                <button class="app-form_outside_button" @click="handleEditHousing(housing?.id)">Modifier</button>
+            </div>
             <br />
         </ul>
 

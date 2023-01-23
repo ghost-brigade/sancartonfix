@@ -28,8 +28,9 @@ const submit = async () => {
     loading.value = true;
 
     try {
-        await security.token({ email: email.value, password: password.value }, false);
+        await security.token({ email: email.value, password: password.value });
         await security.profile()
+            .then((response) => { return response.json() })
             .then(user => setCurrentUser(user))
             .catch(error => { error.value = error.message; })
         ;

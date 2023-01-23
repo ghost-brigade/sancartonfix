@@ -1,10 +1,9 @@
 <script setup>
-import ChangePasswordForm from '../components/forms/ChangePasswordForm.vue';
-import ProfileForm from '../components/forms/ProfileForm.vue';
+import ChangePasswordForm from '../../components/forms/ChangePasswordForm.vue';
+import ProfileForm from '../../components/forms/ProfileForm.vue';
 import { inject } from 'vue';
 import { SECURITY_currentUser } from "@/providers/ProviderKeys";
 import { useRouter } from 'vue-router';
-
 
 const { setCurrentUser } = inject(SECURITY_currentUser);
 const $router = useRouter();
