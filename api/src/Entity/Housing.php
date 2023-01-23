@@ -97,7 +97,7 @@ class Housing
     #[ORM\Column(type: 'uuid', unique: true)]
     #[ORM\GeneratedValue(strategy: "CUSTOM")]
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
-    #[Groups(['housing_read'])]
+    #[Groups(['housing_read', 'renting_read'])]
     #[ApiProperty(identifier: true)]
     private $id = null;
 
@@ -111,7 +111,7 @@ class Housing
         pattern: '/^[a-zA-Z ]+$/',
         message: 'The name can only contain letters and spaces'
     )]
-    #[Groups(['housing_read', 'housing_write'])]
+    #[Groups(['housing_read', 'housing_write', 'renting_read'])]
     #[ApiProperty(required: true, readable: true, writable: true, example: 'My housing')]
     private ?string $name = null;
 
@@ -125,7 +125,7 @@ class Housing
         pattern: '/^[a-zA-Z0-9 ]+$/',
         message: 'The description can only contain letters, numbers and spaces'
     )]
-    #[Groups(['housing_read', 'housing_write'])]
+    #[Groups(['housing_read', 'housing_write', 'renting_read'])]
     #[ApiProperty(required: true, readable: true, writable: true, example: 'My housing description')]
     private ?string $description = null;
 
@@ -169,14 +169,14 @@ class Housing
     private ?bool $active = null;
 
     #[ORM\Column(length: 128, unique: true)]
-    #[Groups(['housing_read'])]
-    #[Gedmo\Slug(fields: ['name', 'createdAt'], unique: true)]
-    #[ApiProperty(identifier: false, readable: true, writable: false)]
+    #[Groups(['housing_read', 'renting_read'])]
+    #[Gedmo\Slug(fields: ['name'], unique: true)]
+    #[ApiProperty(identifier: true, readable: true, writable: false)]
     private $slug;
 
     #[ORM\ManyToOne(inversedBy: 'housings')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['housing_read'])]
+    #[Groups(['housing_read', 'renting_read'])]
     #[ApiProperty(readable: true, writable: false, example: '/api/users/{id}', securityPostDenormalize: 'is_granted("ROLE_ADMIN")')]
     #[Gedmo\Blameable(on: 'create')]
     private ?User $owner = null;

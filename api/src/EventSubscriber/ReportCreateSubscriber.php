@@ -10,15 +10,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 final class ReportCreateSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private EntityManagerInterface $manager,
         private TokenStorageInterface  $tokenStorage,
-    )
-    {
-    }
+        private AuthorizationCheckerInterface $authorizationChecker
+    ) {}
 
     public static function getSubscribedEvents()
     {
@@ -40,22 +40,18 @@ final class ReportCreateSubscriber implements EventSubscriberInterface
         }
 
         if ($report instanceof Report and Request::METHOD_PUT === $method) {
+            $this->verifyUser($report);
 
             if (in_array($report->getStatus(), [Report::STATUS['validated'], Report::STATUS['rejected']]) === false) {
                 throw new \Exception('Invalid status');
             }
 
             /* Pass status of renting to false when report is validated */
-//            if($report->getStatus() === Report::STATUS['validated']) {
-//
-//                $renting = $report->getRenting()->setStatus(false);
-//
-//                $this->manager->persist($renting);
-//
-//            }
-
+            if($report->getStatus() === Report::STATUS['validated']) {
+                $renting = $report->getRenting()->setStatus(false);
+                $this->manager->persist($renting);
+            }
         }
-
     }
 
     public function restrictDuplicate(Report $report): void
@@ -76,6 +72,11 @@ final class ReportCreateSubscriber implements EventSubscriberInterface
 
         if ($user === null) {
             throw new \Exception('You must be logged in to create a report');
+        }
+
+        /** Admin bypass */
+        if($this->authorizationChecker->isGranted('ROLE_ADMIN')) {
+            return;
         }
 
         if ($user !== $report->getRenting()->getClient()) {

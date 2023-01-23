@@ -1,0 +1,14 @@
+---
+- hosts: all
+  tasks:
+    - name: include variables
+      include_vars: 
+        file: vars.yml
+
+    - name: install docker and docker-compose
+      import_tasks: install-docker.yml
+      become: yes
+
+    - name: install pip docker
+      import_tasks: docker-pip.yml
+      become: yes

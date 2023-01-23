@@ -4,8 +4,8 @@ class Api {
   async #fetchApi(url, method, data, jsonFormat = true) {
     const headers = {
       "Content-Type": "application/json",
-      "Accept": "application/ld+json",
-    }
+      Accept: "application/ld+json",
+    };
 
     const token = localStorage.getItem("token");
     if (token) {
@@ -33,7 +33,8 @@ class Api {
 
     if (filters.length > 0) {
       filters.forEach((filter) => {
-        const property = filters?.length > 1 ? `${filter.property}[]` : filter.property;
+        const property =
+          filters?.length > 1 ? `${filter.property}[]` : filter.property;
         url.searchParams.append(property, filter?.value);
       });
     }
@@ -49,25 +50,25 @@ class Api {
     const url = this.#buildUrl(path, page, itemsPerPage, filters, orders);
 
     try {
-      return await this.#fetchApi(url, "GET");
+      return await this.#fetchApi(url, "GET", false);
     } catch (err) {
       throw new Error("Error while getting data");
     }
   }
 
-  async post(path, data) {
+  async post(path, data, jsonFormat = true) {
     const url = new URL(Api.url + path);
     try {
-      return await this.#fetchApi(url, "POST", data);
+      return await this.#fetchApi(url, "POST", data, jsonFormat);
     } catch (err) {
       throw new Error("Error while sending data");
     }
   }
 
-  async put(path, data) {
+  async put(path, data, jsonFormat = true) {
     const url = new URL(Api.url + path);
     try {
-      return await this.#fetchApi(url, "PUT", data);
+      return await this.#fetchApi(url, "PUT", data, jsonFormat);
     } catch (err) {
       throw new Error("Error while modifying data");
     }

@@ -32,6 +32,24 @@ const routes = [
     }
   },
   {
+    path: "/profile/renting",
+    name: "profile-renting",
+    component: () => import("../views/profile/RentingView.vue"),
+    meta: {
+      requiresAuth: true,
+      roles: [],
+    }
+  },
+  {
+    path: "/profile/housing",
+    name: "profile-housing",
+    component: () => import("../views/profile/HousingView.vue"),
+    meta: {
+      requiresAuth: true,
+      roles: [],
+    }
+  },
+  {
     path: "/profile",
     name: "profile",
     component: () => import("../views/ProfileView.vue"),

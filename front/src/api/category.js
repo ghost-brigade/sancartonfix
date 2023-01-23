@@ -6,12 +6,18 @@ class Category extends Api {
     this.path = "/categories";
   }
 
-  async findAll(page = 1, itemsPerPage = 20, filters = [], orders = {}) {
+  async findAll({ page = 1, itemsPerPage = 20, filters = [], orders = {} }) {
     return await this.get(this.path, page, itemsPerPage, filters, orders);
   }
 
   async findOne(id) {
     return await this.get(`${this.path}/${id}`);
+  }
+
+  async findByProperty(property, value) {
+    return await this.findAll({
+      filters: [{ property: property, value: value }],
+    });
   }
 
   async create(data) {
