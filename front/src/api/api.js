@@ -1,7 +1,7 @@
 class Api {
   static url = "https://localhost";
 
-  async #fetchApi(url, method, data, jsonFormat = true) {
+  async #fetchApi(url, method, data = null) {
     const headers = {
       "Content-Type": "application/json",
       Accept: "application/ld+json",
@@ -19,17 +19,22 @@ class Api {
         body: data ? JSON.stringify(data) : null,
       });
 
-      return await (jsonFormat ? response.json() : response);
+      return await response;
     } catch (error) {
       console.error(error);
     }
   }
 
-  #buildUrl(path, page = 1, itemsPerPage = 20, filters = [], orders = {}) {
+  #buildUrl({path, page = 1, itemsPerPage = 20, filters = [], orders = {}}) {
     const url = new URL(Api.url + path);
 
-    url.searchParams.set("page", page);
-    url.searchParams.set("itemsPerPage", itemsPerPage);
+    if (page) {
+      url.searchParams.append("page", page);
+    }
+
+    if (itemsPerPage) {
+      url.searchParams.set("itemsPerPage", itemsPerPage);
+    }
 
     if (filters.length > 0) {
       filters.forEach((filter) => {
@@ -46,29 +51,29 @@ class Api {
     return url;
   }
 
-  async get(path, page = 1, itemsPerPage = 20, filters = [], orders = {}) {
-    const url = this.#buildUrl(path, page, itemsPerPage, filters, orders);
+  async get({path, page = null, itemsPerPage = null, filters = [], orders = {} }) {
+    const url = this.#buildUrl({ path, page, itemsPerPage, filters, orders });
 
     try {
-      return await this.#fetchApi(url, "GET", false);
+      return await this.#fetchApi(url, "GET");
     } catch (err) {
       throw new Error("Error while getting data");
     }
   }
 
-  async post(path, data, jsonFormat = true) {
+  async post(path, data) {
     const url = new URL(Api.url + path);
     try {
-      return await this.#fetchApi(url, "POST", data, jsonFormat);
+      return await this.#fetchApi(url, "POST", data);
     } catch (err) {
       throw new Error("Error while sending data");
     }
   }
 
-  async put(path, data, jsonFormat = true) {
+  async put(path, data) {
     const url = new URL(Api.url + path);
     try {
-      return await this.#fetchApi(url, "PUT", data, jsonFormat);
+      return await this.#fetchApi(url, "PUT", data);
     } catch (err) {
       throw new Error("Error while modifying data");
     }

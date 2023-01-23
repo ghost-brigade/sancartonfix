@@ -3,12 +3,13 @@ import { Api } from "@/api/api";
 class Security extends Api {
     constructor() {
       super();
-      this.path = "/";
+      this.authentication_path = '/authentication_token';
+      this.profile_path        = '/profile';
     }
 
-    async token(data, jsonFormat = true) {
+    async token(data) {
         try {
-          const returned = await this.post(`${this.path}authentication_token`, data, jsonFormat);
+          const returned = await this.post(this.authentication_path, data);
 
           if (returned === null) {
             throw new Error("Error while getting token, please retry later");
@@ -33,7 +34,11 @@ class Security extends Api {
     }
 
     async profile() {
-        return await this.get(`${this.path}profile`, );
+        try {
+          return await this.get({path: this.profile_path}).then((res) => res.json());
+        } catch (err) {
+            console.error(err.message);
+        }
     }
 
 }

@@ -37,7 +37,7 @@ const submit = async () => {
     try {
         const response = await users.update(currentUser?.id, {
             plainPassword: password.value
-        }, false);
+        });
 
         if (response.ok) {
             message.value = 'Le mot de passe a bien été modifié';
@@ -69,7 +69,7 @@ const submit = async () => {
         </div>
 
         <button type="submit" :disabled="loading">
-            {{ loading ? '...' : 'Connexion'}}
+            {{ loading ? '...' : 'Modifier'}}
         </button>
     </form>
 </template>

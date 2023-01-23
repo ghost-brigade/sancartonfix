@@ -8,12 +8,12 @@ class Users extends Api {
     this.validateAccountPath = "/validate_account";
   }
 
-  async findAll(page = 1, itemsPerPage = 20, filters = [], orders = {}) {
-    return await this.get(this.path, page, itemsPerPage, filters, orders);
+  async findAll({page = 1, itemsPerPage = 20, filters = [], orders = {}}) {
+    return await this.get({path: this.path, page, itemsPerPage, filters, orders});
   }
 
   async findOne(id) {
-    return await this.get(`${this.path}/${id}`);
+    return await this.get({path: `${this.path}/${id}`});
   }
 
   async create(data) {
