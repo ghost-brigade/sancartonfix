@@ -6,7 +6,7 @@ class Housing extends Api {
     this.path = "/housings";
   }
 
-  async findAll( page = 1, itemsPerPage = 20, filters = [], orders = {} ) {
+  async findAll({page = 1, itemsPerPage = 20, filters = [], orders = {}}) {
     return await this.get(this.path, page, itemsPerPage, filters, orders);
   }
 

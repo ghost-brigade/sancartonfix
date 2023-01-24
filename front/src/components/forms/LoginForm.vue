@@ -8,6 +8,7 @@ import { useRouter } from 'vue-router';
 const email = ref('admin@localhost');
 const password = ref('password');
 const loading = ref(false);
+const error = ref(null);
 
 const { setCurrentUser } = inject(SECURITY_currentUser);
 const security = new Security();
@@ -26,42 +27,48 @@ const submit = async () => {
 
     loading.value = true;
 
-    await security.token(
-        { email: email.value, password: password.value }
-    ).finally(() => {
+    try {
+        await security.token({ email: email.value, password: password.value }, false);
+        await security.profile()
+            .then(user => setCurrentUser(user))
+            .catch(error => { error.value = error.message; })
+        ;
+    } catch (err) {
+        error.value = err.message;
+    } finally {
         loading.value = false;
-    });
-    
-    const user = await security.profile();
-    setCurrentUser(user);
+    }
 
     if (redirectRoute) {
         router.push(redirectRoute);
     } else {
-        router.push('/profile');
+        router.push("/profile");
     }
-}
+};
 
 onMounted(() => {
-    localStorage.removeItem('token');
+    localStorage.removeItem("token");
 });
-
 </script>
 
 <template>
     <form @submit.prevent="submit">
         <h2>Me connecter</h2>
-        
-        <div class="app-form_row">
-            <input v-model="email" type="email" placeholder="Email">
+
+        <div v-if="error">
+            {{ error }}
         </div>
 
         <div class="app-form_row">
-            <input v-model="password" type="password" placeholder="Mot de passe">
+            <input v-model="email" type="email" placeholder="Email" />
+        </div>
+
+        <div class="app-form_row">
+            <input v-model="password" type="password" placeholder="Mot de passe" />
         </div>
 
         <button type="submit" :disabled="loading">
-            {{ loading ? '...' : 'Connexion'}}
+            {{ loading ? "..." : "Connexion" }}
         </button>
     </form>
 </template>

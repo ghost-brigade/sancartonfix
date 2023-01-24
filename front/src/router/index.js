@@ -23,6 +23,28 @@ const routes = [
     path: "/result",
     name: "result",
     component: () => import("../views/ResultView.vue"),
+    meta: {
+      requiresAuth: true,
+      roles: [],
+    }
+  },
+  {
+    path: "/profile/renting",
+    name: "profile-renting",
+    component: () => import("../views/profile/RentingView.vue"),
+    meta: {
+      requiresAuth: true,
+      roles: [],
+    }
+  },
+  {
+    path: "/profile/housing",
+    name: "profile-housing",
+    component: () => import("../views/profile/HousingView.vue"),
+    meta: {
+      requiresAuth: true,
+      roles: [],
+    }
   },
   {
     path: "/profile",
@@ -47,13 +69,13 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem("token");
-  
+
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (!token) {
       next({
         path: "/login",
         query: {
-          redirect: to.fullPath 
+          redirect: to.fullPath
         },
       });
     } else {

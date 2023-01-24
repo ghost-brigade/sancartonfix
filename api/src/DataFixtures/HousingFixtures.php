@@ -13,19 +13,13 @@ class HousingFixtures extends Fixture implements DependentFixtureInterface
     public const REFERENCE = 'housing-';
 
     private array $users = [];
-    private array $categories = [];
 
     private int $user_count = 12;
-    private int $category_count = 4;
 
     private function populate(ObjectManager $manager): void
     {
         for ($i = 0; $i < $this->user_count; $i++) {
             $this->users[] = $this->getReference(UserFixtures::REFERENCE . $i);
-        }
-
-        for ($i = 0; $i < $this->category_count; $i++) {
-            $this->categories[] = $this->getReference(CategoryFixtures::REFERENCE . $i);
         }
     }
 
@@ -37,13 +31,12 @@ class HousingFixtures extends Fixture implements DependentFixtureInterface
 
         $faker = Factory::create('fr_FR');
 
-        shuffle($this->users);
-        shuffle($this->categories);
 
         foreach ($datas as $key => $data) {
 
-            $user = array_pop($this->users);
-            $category = array_pop($this->categories);
+            $user = $this->users[array_rand($this->users)];
+
+            $category = $this->getReference(CategoryFixtures::REFERENCE . $data['category']);
 
             $housing = new Housing();
             $housing->setName($data['name']);
@@ -52,7 +45,7 @@ class HousingFixtures extends Fixture implements DependentFixtureInterface
             $housing->setLongitude($faker->longitude);
             $housing->setPrice($faker->randomFloat(2, 0.10, 100));
             $housing->setOwner($user);
-            $housing->setCategory($category);
+            $housing->setCategory($category ?? null);
             $housing->setActive($faker->boolean);
             // dd($this->getReference(CityFixtures::REFERENCE . "75001"));
             $housing->setCity($this->getReference(CityFixtures::REFERENCE . "75001"));
@@ -63,6 +56,7 @@ class HousingFixtures extends Fixture implements DependentFixtureInterface
         }
 
         $manager->flush();
+
     }
 
     public function getDependencies(): array

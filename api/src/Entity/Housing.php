@@ -22,6 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: HousingRepository::class)]
 #[ApiResource(
@@ -96,7 +97,7 @@ class Housing
     #[ORM\Column(type: 'uuid', unique: true)]
     #[ORM\GeneratedValue(strategy: "CUSTOM")]
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
-    #[Groups(['housing_read'])]
+    #[Groups(['housing_read', 'renting_read'])]
     #[ApiProperty(identifier: true)]
     private $id = null;
 
@@ -110,7 +111,7 @@ class Housing
         pattern: '/^[a-zA-Z ]+$/',
         message: 'The name can only contain letters and spaces'
     )]
-    #[Groups(['housing_read', 'housing_write'])]
+    #[Groups(['housing_read', 'housing_write', 'renting_read'])]
     #[ApiProperty(required: true, readable: true, writable: true, example: 'My housing')]
     private ?string $name = null;
 
@@ -124,7 +125,7 @@ class Housing
         pattern: '/^[a-zA-Z0-9 ]+$/',
         message: 'The description can only contain letters, numbers and spaces'
     )]
-    #[Groups(['housing_read', 'housing_write'])]
+    #[Groups(['housing_read', 'housing_write', 'renting_read'])]
     #[ApiProperty(required: true, readable: true, writable: true, example: 'My housing description')]
     private ?string $description = null;
 
@@ -163,14 +164,21 @@ class Housing
     private ?float $price = null;
 
     #[ORM\Column]
-    #[Groups(['housing_read', 'housing_write'])]
-    #[ApiProperty(readable: true, writable: true, example: true, securityPostDenormalize: 'is_granted("ROLE_ADMIN")')]
+    #[Groups(['housing_read', 'housing_put'])]
+    #[ApiProperty(readable: true, writable: true, example: true)]
     private ?bool $active = null;
+
+    #[ORM\Column(length: 128, unique: true)]
+    #[Groups(['housing_read', 'renting_read'])]
+    #[Gedmo\Slug(fields: ['name'], unique: true)]
+    #[ApiProperty(identifier: true, readable: true, writable: false)]
+    private $slug;
 
     #[ORM\ManyToOne(inversedBy: 'housings')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['housing_read', 'housing_write'])]
-    #[ApiProperty(readable: true, writable: true, example: '/api/users/{id}', securityPostDenormalize: 'is_granted("ROLE_ADMIN")')]
+    #[Groups(['housing_read', 'renting_read'])]
+    #[ApiProperty(readable: true, writable: false, example: '/api/users/{id}', securityPostDenormalize: 'is_granted("ROLE_ADMIN")')]
+    #[Gedmo\Blameable(on: 'create')]
     private ?User $owner = null;
 
     #[ORM\Column]
@@ -206,6 +214,7 @@ class Housing
         $this->likes = new ArrayCollection();
         $this->media = new ArrayCollection();
         $this->rentings = new ArrayCollection();
+        $this->active = true;
     }
 
     public function getId(): ?Uuid
@@ -284,6 +293,25 @@ class Housing
 
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param mixed $slug
+     * @return Housing
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+        return $this;
+    }
+
 
     public function getOwner(): ?User
     {

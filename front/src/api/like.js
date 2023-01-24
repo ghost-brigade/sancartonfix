@@ -1,23 +1,17 @@
 import { Api } from "@/api/api";
 
-class Category extends Api {
+class Like extends Api {
   constructor() {
     super();
-    this.path = "/categories";
+    this.path = "/likes";
   }
 
-  async findAll({ page = 1, itemsPerPage = 20, filters = [], orders = {} }) {
+  async findAll(page = 1, itemsPerPage = 20, filters = [], orders = {}) {
     return await this.get(this.path, page, itemsPerPage, filters, orders);
   }
 
   async findOne(id) {
     return await this.get(`${this.path}/${id}`);
-  }
-
-  async findByProperty(property, value) {
-    return await this.findAll({
-      filters: [{ property: property, value: value }],
-    });
   }
 
   async create(data) {
@@ -33,4 +27,4 @@ class Category extends Api {
   }
 }
 
-export { Category };
+export { Like };

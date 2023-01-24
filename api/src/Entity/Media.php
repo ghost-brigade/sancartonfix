@@ -66,7 +66,7 @@ class Media
     private $id = null;
 
     #[ApiProperty(types: ['https://schema.org/contentUrl'])]
-    #[Groups(['media_read', 'housing_read'])]
+    #[Groups(['media_read', 'renting_read', 'housing_read'])]
     public ?string $contentUrl = null;
 
     #[Vich\UploadableField(mapping: "media", fileNameProperty: "filePath")]

@@ -1,15 +1,74 @@
-name: Deployment
+name: Azure VM Update
 
 on:
-  workflow_call: ~
   workflow_dispatch: ~
+  workflow_call: ~
 
+env:
+  ansible_path: ./ansible
+  
 jobs:
   deploy:
-    name: Redeploy webhook call
+    name: Deploy to Azure VM
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy docker container webhook
-        uses: joelwmale/webhook-action@master
+      - uses: actions/checkout@v2
+
+      - name: Make envfile
+        uses: SpicyPizza/create-envfile@v1
         with:
-          url: ${{ secrets.WEBHOOK_URL }}
+          envkey_APP_ENV: prod
+          envkey_APP_DEBUG: false
+          envkey_LOCK_DSN: flock
+          envkey_JWT_SECRET_KEY: "%kernel.project_dir%/config/jwt/private.pem"
+          envkey_JWT_PUBLIC_KEY: "%kernel.project_dir%/config/jwt/public.pem"
+          envkey_APP_SECRET: ${{ secrets.ENV_APP_SECRET }}
+          envkey_DATABASE_URL: ${{ secrets.ENV_DATABASE_URL }}
+          envkey_MAILER_DSN: ${{ secrets.ENV_MAILER_DSN }}
+          envkey_CORS_ALLOW_ORIGIN: ${{ secrets.ENV_CORS_ALLOW_ORIGIN }}
+          envkey_TRUSTED_HOSTS: ${{ secrets.ENV_TRUSTED_HOSTS }}
+          envkey_TRUSTED_PROXIES: ${{ secrets.ENV_TRUSTED_PROXIES }}
+          envkey_MERCURE_URL: ${{ secrets.ENV_MERCURE_URL }}
+          envkey_MERCURE_PUBLIC_URL: ${{ secrets.ENV_MERCURE_PUBLIC_URL }}
+          envkey_MERCURE_JWT_SECRET: ${{ secrets.ENV_MERCURE_JWT_SECRET }}
+          envkey_JWT_PASSPHRASE: ${{ secrets.ENV_JWT_PASSPHRASE }}
+          envkey_SERVER_NAME: ${{ secrets.ENV_SERVER_NAME }}
+          envkey_POSTGRES_DB: ${{ secrets.ENV_POSTGRES_DB }}
+          envkey_POSTGRES_USER: ${{ secrets.ENV_POSTGRES_USER }}
+          envkey_POSTGRES_PASSWORD: ${{ secrets.ENV_POSTGRES_PASSWORD }}
+          file_name: .env.prod
+      
+      - uses: kielabokkie/ssh-key-and-known-hosts-action@v1
+        with:
+          ssh-private-key: ${{ secrets.AZURE_SSH_KEY }}
+          ssh-host: ${{secrets.AZURE_VM_IP}}
+
+      - name: Install docker and docker compose
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          playbook: docker/main.yml
+          directory: ${{ env.ansible_path }}
+          key: ${{secrets.AZURE_SSH_KEY}}
+          inventory: |
+            [all]
+            ${{ secrets.AZURE_VM_IP }} ansible_user=${{ secrets.AZURE_SSH_USER }}
+            
+            [azure_vm:vars]
+            ansible_python_interpreter=/usr/bin/python3
+            
+      - name: Update docker compose image
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          playbook: azure-vm-update.yml
+          directory: ${{ env.ansible_path }}
+          key: ${{secrets.AZURE_SSH_KEY}}
+          options:
+            --extra-vars gh_repo=${{ secrets.GH_REPO }} 
+            --extra-vars azure_vm_user=${{ secrets.AZURE_SSH_USER }}
+            --extra-vars github_workspace=${{ github.workspace }}
+          inventory: |
+            [all]
+            ${{ secrets.AZURE_VM_IP }} ansible_user=${{ secrets.AZURE_SSH_USER }}
+            
+            [azure_vm:vars]
+            ansible_python_interpreter=/usr/bin/python3

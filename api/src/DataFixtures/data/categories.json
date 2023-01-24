@@ -1,14 +1,7 @@
 [
-    {
-        "name": "Carton"
-    },
-    {
-        "name": "Tente"
-    },
-    {
-        "name": "Banc"
-    },
-    {
-        "name": "Ascenseur"
-    }
+    {"name": "Carton"},
+    {"name": "Tente"},
+    {"name": "Banc"},
+    {"name": "Ascenseur"},
+    {"name": "Divers"}
 ]

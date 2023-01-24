@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
@@ -14,6 +17,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: RentingRepository::class)]
 #[ApiResource(
@@ -44,6 +48,20 @@ use Symfony\Component\Uid\Uuid;
     security: 'is_granted("ROLE_USER")',
     securityMessage: 'You are not allowed to access this resource.',
 )]
+#[ApiFilter(
+    DateFilter::class,
+    properties: [
+        'startDate' => DateFilter::EXCLUDE_NULL,
+        'endDate' => DateFilter::EXCLUDE_NULL,
+        'createdAt' => DateFilter::EXCLUDE_NULL,
+    ]
+)]
+#[ApiFilter(
+    OrderFilter::class,
+    properties: [
+        'createdAt',
+    ],
+)]
 class Renting
 {
     #[ORM\Id]
@@ -66,8 +84,9 @@ class Renting
 
     #[ORM\ManyToOne(inversedBy: 'rentings')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['renting_read', 'renting_write'])]
-    #[ApiProperty(readable: true, writable: true, required: true, example: '/api/users/{id}')]
+    #[Groups(['renting_read'])]
+    #[ApiProperty(readable: true, writable: false, required: true, example: '/api/users/{id}')]
+    #[Gedmo\Blameable(on: 'create')]
     private ?User $client = null;
 
     #[ORM\ManyToOne(inversedBy: 'rentings')]
@@ -75,6 +94,11 @@ class Renting
     #[Groups(['renting_read', 'renting_write'])]
     #[ApiProperty(readable: true, writable: true, required: true, example: '/api/housing/{id}')]
     private ?Housing $housing = null;
+
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[Groups(['renting_read'])]
+    #[ApiProperty(readable: true, writable: false, example: '2021-01-01T00:00:00+00:00')]
+    private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\OneToOne(mappedBy: 'renting', cascade: ['persist', 'remove'])]
     private ?Report $report = null;
@@ -84,6 +108,11 @@ class Renting
 
     #[ORM\Column(nullable: true)]
     private ?float $price = null;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+    }
 
     public function getId(): ?Uuid
     {
@@ -151,6 +180,18 @@ class Renting
         }
 
         $this->report = $report;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }

@@ -41,12 +41,21 @@ const submit = async () => {
         return;
     }
 
-    const updated = await users.update(
-        currentUser.id,
-        { email: email.value, firstname: firstname.value, lastname: lastname.value }
-    ).finally(() => {
-        loading.value = false;
-    });
+    const userUpdate = {}
+
+    if (email.value !== currentUser.email) {
+        userUpdate.email = email.value;
+    }
+    if (firstname.value !== currentUser.firstname) {
+        userUpdate.firstname = firstname.value;
+    }
+    if (lastname.value !== currentUser.lastname) {
+        userUpdate.lastname = lastname.value;
+    }
+
+    const updated = await users.update(currentUser.id, userUpdate)
+        .finally(() => {loading.value = false});
+
     setCurrentUser(updated);
 }
 </script>
