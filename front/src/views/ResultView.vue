@@ -49,7 +49,10 @@ export default defineComponent({
   methods: {
     async getHousings() {
       const housing = new Housing();
-      const response = await housing.findAll();
+      const filters = [
+        { property: "category", value: "Carton" },
+      ];
+      const response = await housing.findAll(1, 20, filters);
       this.housings = response['hydra:member'];
       console.log(this.housings);
       this.slides = this.housings.map(housing => {

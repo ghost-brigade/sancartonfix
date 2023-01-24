@@ -4,6 +4,7 @@ import { ref } from 'vue';
 
 const category = ref('');
 const city = ref('');
+const $rooter = useRouter();
 
 const submit = () => {
     if (!category.value || !city.value) {
