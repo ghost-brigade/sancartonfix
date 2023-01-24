@@ -1,0 +1,23 @@
+
+.housings{
+    // width: 30%;
+}
+.housings img{
+    width: 360px;
+    height: 360px;
+    border-radius: 8px;
+}
+#container-result {
+    // width: 80%;
+    display: flex;
+    justify-content: flex-start;
+    grid-gap: 40px;
+    margin-top: 100px;
+  }
+
+#result{
+    background-color: #fffce3;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+}
