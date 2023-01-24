@@ -30,8 +30,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 )]
 #[GetCollection(
     normalizationContext: ['groups' => ['housing_cget', 'housing_read']],
-    security: 'is_granted("ROLE_USER")',
-    securityMessage: 'You are not allowed to access this resource.',
+    // security: 'is_granted("ROLE_USER")',
+    // securityMessage: 'You are not allowed to access this resource.',
 )]
 #[Get(
     normalizationContext: ['groups' => ['housing_get', 'housing_read']],
@@ -60,6 +60,8 @@ use Symfony\Component\Validator\Constraints as Assert;
         'latitude' => 'exact',
         'longitude' => 'exact',
         'category.name' => 'exact',
+        'city.name' => 'exact',
+        'city.zipCode' => 'exact',
         'owner' => 'exact',
     ]
 )]
@@ -193,6 +195,10 @@ class Housing
     #[ORM\OneToMany(mappedBy: 'housing', targetEntity: Renting::class)]
     #[Groups(['housing_read'])]
     private Collection $rentings;
+
+    #[ORM\ManyToOne(inversedBy: 'housings')]
+    #[Groups(['housing_read'])]
+    private ?City $City = null;
 
     public function __construct()
     {
@@ -401,6 +407,18 @@ class Housing
     public function setCategory(?Category $Category): self
     {
         $this->Category = $Category;
+
+        return $this;
+    }
+
+    public function getCity(): ?City
+    {
+        return $this->City;
+    }
+
+    public function setCity(?City $City): self
+    {
+        $this->City = $City;
 
         return $this;
     }

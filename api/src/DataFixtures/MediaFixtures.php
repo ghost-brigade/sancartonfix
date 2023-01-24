@@ -27,19 +27,17 @@ class MediaFixtures extends Fixture implements DependentFixtureInterface
         $datas = json_decode(file_get_contents(__DIR__ . '/data/medias.json'), true);
 
         foreach ($datas as $key => $data) {
-
-            shuffle($this->housings);
-            $housing = $this->housings[0];
+            
+            $housing = $this->housings[array_rand($this->housings)];
 
             $media = new Media();
-            $media->setName($data['name']);
+            $media->setFilePath($data['path']);
             $media->setHousing($housing);
 
             $manager->persist($media);
 
             $this->setReference(self::REFERENCE . $key, $media);
-
-        }
+        }       
 
         $manager->flush();
     }

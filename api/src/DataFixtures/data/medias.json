@@ -1,32 +1,42 @@
 [
     {
-        "name": "Media1.jpg"
+        "path": "carton1.jpeg",
+        "category": "carton"
     },
     {
-        "name": "Media2.jpg"
+        "path": "carton2.jpg",
+        "category": "carton"
     },
     {
-        "name": "Media3.jpg"
+        "path": "carton3.jpg",
+        "category": "carton"
     },
     {
-        "name": "Media4.jpg"
+        "path": "carton4.png",
+        "category": "carton"
     },
     {
-        "name": "Media5.jpg"
+        "path": "carton5.jpeg",
+        "category": "carton"
     },
     {
-        "name": "Media6.jpg"
+        "path": "carton6.jpg",
+        "category": "carton"
     },
     {
-        "name": "Media7.jpg"
+        "path": "carton7.jpg",
+        "category": "carton"
     },
     {
-        "name": "Media8.jpg"
+        "path": "carton8.jpg",
+        "category": "carton"
     },
     {
-        "name": "Media9.jpg"
+        "path": "carton9.webp",
+        "category": "carton"
     },
     {
-        "name": "Media10.jpg"
+        "path": "carton10.png",
+        "category": "carton"
     }
 ]
