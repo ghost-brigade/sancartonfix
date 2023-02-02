@@ -62,6 +62,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
         'longitude' => 'exact',
         'category.name' => 'exact',
         'owner' => 'exact',
+        'slug' => 'exact',
+        'rentings.status' => 'exact',
     ]
 )]
 #[ApiFilter(

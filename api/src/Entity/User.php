@@ -52,7 +52,7 @@ use App\Controller\User\SecurityController;
     securityMessage: 'Only admins can access this resource.'
 )]
 #[Post(
-    denormalizationContext:  ['groups' => ['user_post', 'user_write']],
+    denormalizationContext: ['groups' => ['user_post', 'user_write']],
 )]
 #[Put(
     denormalizationContext: ['groups' => ['user_put', 'user_write']],
@@ -105,8 +105,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user_write'])]
     #[Assert\Type(type: 'string')]
     #[Assert\Length(
-        min: 8, minMessage: 'Your password should be at least {{ limit }} characters',
-        max: 200, maxMessage: 'Your password should not be more than {{ limit }} characters'
+        min: 8,
+        minMessage: 'Your password should be at least {{ limit }} characters',
+        max: 200,
+        maxMessage: 'Your password should not be more than {{ limit }} characters'
     )]
     #[ApiProperty(writable: true, readable: false, example: 'password', description: 'The password of the user', required: false)]
     private ?string $plainPassword = null;
@@ -126,8 +128,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     #[Assert\Length(
-        min: 2, minMessage: 'Your firstname should be at least {{ limit }} characters',
-        max: 255, maxMessage: 'Your firstname should not be more than {{ limit }} characters'
+        min: 2,
+        minMessage: 'Your firstname should be at least {{ limit }} characters',
+        max: 255,
+        maxMessage: 'Your firstname should not be more than {{ limit }} characters'
     )]
     #[Groups(['user_read', 'user_write'])]
     #[ApiProperty(writable: true, readable: true, example: 'Julien', description: 'The firstname of the user')]
@@ -136,8 +140,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     #[Assert\Length(
-        min: 2, minMessage: 'Your lastname should be at least {{ limit }} characters',
-        max: 255, maxMessage: 'Your lastname should not be more than {{ limit }} characters'
+        min: 2,
+        minMessage: 'Your lastname should be at least {{ limit }} characters',
+        max: 255,
+        maxMessage: 'Your lastname should not be more than {{ limit }} characters'
     )]
     #[Groups(['user_read', 'user_write'])]
     #[ApiProperty(writable: true, readable: true, example: 'Bécile', description: 'The lastname of the user')]
@@ -394,5 +400,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
 }

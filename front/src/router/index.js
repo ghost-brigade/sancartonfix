@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
+import {createRouter, createWebHistory} from "vue-router";
 
 const routes = [
   {
@@ -9,6 +9,18 @@ const routes = [
       requiresAuth: false,
       roles: [],
     }
+  },
+  {
+    path: "/housing/:slug",
+    name: "housing",
+    component: () => import("../views/HousingView.vue"),
+    meta: {
+      requiresAuth: true,
+      roles: [],
+    },
+    props: (route) => ({
+      slug: route.params.slug,
+    }),
   },
   {
     path: "/about",

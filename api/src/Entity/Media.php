@@ -61,7 +61,7 @@ class Media
     #[ORM\Column(type: 'uuid', unique: true)]
     #[ORM\GeneratedValue(strategy: "CUSTOM")]
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
-    #[Groups(['media_read'])]
+    #[Groups(['media_read', 'housing_read'])]
     #[ApiProperty(identifier: true, writable: false, readable: true)]
     private $id = null;
 
