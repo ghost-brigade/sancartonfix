@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
@@ -45,6 +48,20 @@ use Gedmo\Mapping\Annotation as Gedmo;
     security: 'is_granted("ROLE_USER")',
     securityMessage: 'You are not allowed to access this resource.',
 )]
+#[ApiFilter(
+    DateFilter::class,
+    properties: [
+        'startDate' => DateFilter::EXCLUDE_NULL,
+        'endDate' => DateFilter::EXCLUDE_NULL,
+        'createdAt' => DateFilter::EXCLUDE_NULL,
+    ]
+)]
+#[ApiFilter(
+    OrderFilter::class,
+    properties: [
+        'createdAt',
+    ],
+)]
 class Renting
 {
     #[ORM\Id]
@@ -78,6 +95,11 @@ class Renting
     #[ApiProperty(readable: true, writable: true, required: true, example: '/api/housing/{id}')]
     private ?Housing $housing = null;
 
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[Groups(['renting_read'])]
+    #[ApiProperty(readable: true, writable: false, example: '2021-01-01T00:00:00+00:00')]
+    private ?\DateTimeImmutable $createdAt = null;
+
     #[ORM\OneToOne(mappedBy: 'renting', cascade: ['persist', 'remove'])]
     private ?Report $report = null;
 
@@ -86,6 +108,11 @@ class Renting
 
     #[ORM\Column(nullable: true)]
     private ?float $price = null;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+    }
 
     public function getId(): ?Uuid
     {
@@ -153,6 +180,18 @@ class Renting
         }
 
         $this->report = $report;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }
