@@ -1,8 +1,9 @@
 <template>
   <transition :name="transitionEffect">
-    <div class="carousel-item" v-show="currentSlide === index" @mouseenter="$emit('mouseenter')"
-      @mouseout="$emit('mouseout')">
-      <img :src="'https://localhost'+imgUrl" />
+    <div class="carousel-item" v-show="currentSlide === index">
+      <!-- <img :src="'https://localhost/images/media/carton2.jpg'" /> -->
+      <img :src="'https://localhost'+imgUrl " />
+
     </div>
   </transition>
 </template>

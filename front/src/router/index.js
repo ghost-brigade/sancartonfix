@@ -20,7 +20,7 @@ const routes = [
     }
   },
   {
-    path: "/result",
+    path: '/result/:category/:city',
     name: "result",
     component: () => import("../views/ResultView.vue"),
     meta: {

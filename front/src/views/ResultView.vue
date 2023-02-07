@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div id="result">
     <div id="container-result">
       <div v-for="housing in housings" :key="housing.id" class="housings">
@@ -9,16 +9,26 @@
           </template>
         </carousel>
         <h3>{{ housing.name }}</h3>
-        <!-- <p>{{ housing.latitude }}</p>
-        <p>{{ housing.longitude }}</p> -->
+        <p>{{ housing.price }}€/nuit</p>
+      </div>
+    </div>
+  </div>
+
+</template> -->
+
+<template>
+  <div id="result">
+    <div id="container-result">
+      <div v-for="housing in housings" :key="housing.id" class="housings">
+        <carousel :slides="housing.media" :interval="1000" controls indicators>
+        </carousel>
+        <h3>{{ housing.name }}</h3>
         <p>{{ housing.price }}€/nuit</p>
       </div>
     </div>
   </div>
 
 </template>
-
-
 
 
 
@@ -38,6 +48,16 @@ export default defineComponent({
     CarouselIndicators,
     CarouselItem
   },
+  props: {
+    category: {
+      type: String,
+      required: true
+    },
+    city: {
+      type: String,
+      required: true
+    }
+  },
   data() {
     return {
       housings: []
@@ -48,25 +68,18 @@ export default defineComponent({
   },
   methods: {
     async getHousings() {
-      const housing = new Housing();
+      const housingApi = new Housing();
+      const category = this.$route.params.category;
+      console.log(category);
+      const city = this.$route.params.city
       const filters = [
-        { property: "category", value: "Carton" },
+        // { property: "name", value: category.charAt(0).toUpperCase() + category.slice(1) },
       ];
-      const response = await housing.findAll(1, 20, filters);
+      const response = await housingApi.findAll({page : 1, itemPerPage: 20, filters});
       this.housings = response['hydra:member'];
       console.log(this.housings);
-      this.slides = this.housings.map(housing => {
-        console.log(housing.media)
-        return housing.media.map(media => {
-          console.log(media.contentUrl)
-          return {
-            src: 'https://localhost' + media.contentUrl,
-            alt: media.filePath
-          }
-        })
-      })
-    },
 
+    },
   }
 })
 </script>

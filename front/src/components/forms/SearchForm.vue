@@ -1,46 +1,53 @@
 <script setup>
-import {onMounted, ref} from 'vue';
+import { onMounted, ref } from 'vue';
 import { Category } from '@/api/category';
+import router from '@/router'
 
-const category = ref({});
+const categories = ref([]);
+// const selectedCategory = ref(null);
 const city = ref('');
-const $rooter = useRouter();
 
-onMounted(async () => {
-    const categoryApi = new Category();
-
-    category.value = await categoryApi.findAll({
-        orders: { property: "name", direction: "ASC" },
-    }).then((response) => {
-        return response["hydra:member"];
-    });
-});
+// onMounted(async () => {
+//     const categoryApi = new Category();
+//     categories.value = await categoryApi.findAll({
+//         orders: { property: "name", direction: "ASC" },
+//     }).then((response) => {
+//         return response["hydra:member"];
+//     });
+//     console.log(categories.value);
+// });
 
 const submit = () => {
-    if (!category.value || !city.value) {
+    if (!categories.value || !city.value) {
         return;
     }
-    console.log(category.value);
-    console.log(city.value);
+    router.push({ name: 'result', params: { category: categories.value, city: city.value } });
 };
 </script>
 
 <template>
     <form @submit.prevent="submit">
         <h2>Trouver mon logement</h2>
-
-        <div class="app-form_row">
-            <select v-model="category.value">
+        <!-- <div class="app-form_row">
+            <select v-if="categories.value.length" v-model="selectedCategory">
                 <option :value="null" :disabled="true" selected>Choisir une catégorie</option>
-                <option
-                    v-for="category in category"
-                    :key="category.id"
-                    :value="category.id"
-                >
-                    {{ category.name }}
+                <option v-for="category in categories.value" :key="category.id" :value="category">
+                    {{ category }}
                 </option>
             </select>
+        </div> -->
+
+        <div class="app-form_row">
+            <select v-model="categories">
+                <option disabled value="">Sélectionnez une catégorie</option>
+                <option value="carton">Carton</option>
+                <option value="tente">Tente</option>
+                <option value="banc">Banc</option>
+                <option value="ascenseur">Ascenseur</option>
+                <option value="divers">Divers</option>
+            </select>
         </div>
+
 
         <div class="app-form_row">
             <select v-model="city">
