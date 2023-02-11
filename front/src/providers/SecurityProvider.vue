@@ -2,28 +2,33 @@
 import { ref, reactive, provide, onMounted } from "vue";
 import LoadingElement from "@/components/staples/LoadingElement.vue";
 import { SECURITY_currentUser } from "./ProviderKeys";
-import { useRoute } from "vue-router";
+import { useRouter } from "vue-router";
 import { Security } from "@/api/security";
 
-const $route = useRoute();
+const $router = useRouter();
 const loading = ref(true);
 
 const currentUser = reactive({});
 const setCurrentUser = (data) => {
     Object.assign(currentUser, data);
-}
+};
 
 provide(SECURITY_currentUser, {
     currentUser,
-    setCurrentUser
+    setCurrentUser,
 });
 
 const security = new Security();
 onMounted(async () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
         const user = await security.profile();
-        setCurrentUser(user);
+        if (user) {
+            setCurrentUser(user);
+        } else {
+            localStorage.removeItem("token");
+            $router.push("/login");
+        }
         loading.value = false;
     } else {
         loading.value = false;

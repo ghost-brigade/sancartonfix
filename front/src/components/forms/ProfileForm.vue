@@ -1,7 +1,7 @@
 <script setup>
-import { inject, ref, watch } from 'vue';
+import { inject, ref, watch } from "vue";
 import { SECURITY_currentUser } from "@/providers/ProviderKeys";
-import { Users } from '@/api/users';
+import { Users } from "@/api/users";
 
 /**
  * "id": "1ed98034-ff73-61f2-acdc-f91a37951843",
@@ -14,7 +14,6 @@ import { Users } from '@/api/users';
 	"lastname": "Bélix",
 	"gender": true
  */
-
 
 const loading = ref(false);
 
@@ -32,7 +31,6 @@ watch(currentUser, () => {
 
 const users = new Users();
 const submit = async () => {
-    console.log('submit');
     if (loading.value) {
         return;
     }
@@ -41,7 +39,7 @@ const submit = async () => {
         return;
     }
 
-    const userUpdate = {}
+    const userUpdate = {};
 
     if (email.value !== currentUser.email) {
         userUpdate.email = email.value;
@@ -53,11 +51,14 @@ const submit = async () => {
         userUpdate.lastname = lastname.value;
     }
 
-    const updated = await users.update(currentUser.id, userUpdate)
-        .finally(() => {loading.value = false});
+    const updated = await users
+        .update(currentUser.id, userUpdate)
+        .finally(() => {
+            loading.value = false;
+        });
 
     setCurrentUser(updated);
-}
+};
 </script>
 
 <template>
@@ -65,20 +66,20 @@ const submit = async () => {
         <h2>Modifier mon profil</h2>
 
         <div class="app-form_row">
-            <input v-model="lastname" type="text" placeholder="Nom">
+            <input v-model="lastname" type="text" placeholder="Nom" />
         </div>
 
         <div class="app-form_row">
-            <input v-model="firstname" type="text" placeholder="Prénom">
+            <input v-model="firstname" type="text" placeholder="Prénom" />
         </div>
 
         <div class="app-form_row">
-            <input v-model="email" type="email" placeholder="Email">
+            <input v-model="email" type="email" placeholder="Email" />
         </div>
 
         <div class="app-form_row app-form_buttons">
             <button type="submit" :disabled="loading">
-                {{ loading ? '...' : 'Modifier'}}
+                {{ loading ? "..." : "Modifier" }}
             </button>
         </div>
     </form>

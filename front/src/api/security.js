@@ -7,35 +7,34 @@ class Security extends Api {
     }
 
     async token(data, jsonFormat = true) {
-        try {
-          const returned = await this.post(`${this.path}authentication_token`, data, jsonFormat);
+      try {
+        const returned = await this.post(`${this.path}authentication_token`, data, jsonFormat);
 
-          if (returned === null) {
-            throw new Error("Error while getting token, please retry later");
-          }
-
-          const res = await returned?.json();
-
-          if(returned?.ok) {
-            const token = res.token;
-
-            if (token) {
-              localStorage.setItem("token", token);
-            }
-
-            return token;
-          }
-
-          throw new Error(res.message);
-        } catch (err) {
-          throw new Error(err);
+        if (returned === null) {
+          throw new Error("Error while getting token, please retry later");
         }
-    }
 
-    async profile() {
-        return await this.get(`${this.path}profile`, );
-    }
+        const res = await returned?.json();
 
+        if(returned?.ok) {
+          const token = res.token;
+
+          if (token) {
+            localStorage.setItem("token", token);
+          }
+
+          return token;
+        }
+
+        throw new Error(res.message);
+      } catch (err) {
+        throw new Error(err);
+      }
+  }
+
+  async profile() {
+    return await this.get(`${this.path}profile`);
+  }
 }
 
 export { Security };

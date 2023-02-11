@@ -1,0 +1,18 @@
+.app-card_list {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.app-card {
+    list-style: none;
+    flex: 1;
+    min-width: 300px;
+    max-width: 400px;
+
+    .app-card_img a, .app-card_img img{
+        width: 100%;
+    }
+}

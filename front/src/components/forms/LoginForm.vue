@@ -1,12 +1,11 @@
 <script setup>
-
-import { ref, onMounted, inject } from 'vue';
+import { ref, onMounted, inject } from "vue";
 import { Security } from "@/api/security";
 import { SECURITY_currentUser } from "@/providers/ProviderKeys";
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
 
-const email = ref('admin@localhost');
-const password = ref('password');
+const email = ref("admin@localhost");
+const password = ref("password");
 const loading = ref(false);
 const error = ref(null);
 
@@ -28,11 +27,19 @@ const submit = async () => {
     loading.value = true;
 
     try {
-        await security.token({ email: email.value, password: password.value }, false);
-        await security.profile()
-            .then(user => setCurrentUser(user))
-            .catch(error => { error.value = error.message; })
-        ;
+        await security.token(
+            { email: email.value, password: password.value },
+            false
+        );
+        await security
+            .profile()
+            .then((user) => {
+                console.log(user);
+                setCurrentUser(user);
+            })
+            .catch((error) => {
+                error.value = error.message;
+            });
     } catch (err) {
         error.value = err.message;
     } finally {
@@ -64,7 +71,11 @@ onMounted(() => {
         </div>
 
         <div class="app-form_row">
-            <input v-model="password" type="password" placeholder="Mot de passe" />
+            <input
+                v-model="password"
+                type="password"
+                placeholder="Mot de passe"
+            />
         </div>
 
         <div class="app-form_row" style="

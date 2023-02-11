@@ -1,11 +1,11 @@
 <script setup>
-import { onMounted, ref } from 'vue';
-import { Category } from '@/api/category';
-import router from '@/router'
+import { onMounted, ref } from "vue";
+import { Category } from "@/api/category";
+import router from "@/router";
 
 const categories = ref([]);
 // const selectedCategory = ref(null);
-const city = ref('');
+const city = ref("");
 
 // onMounted(async () => {
 //     const categoryApi = new Category();
@@ -21,7 +21,10 @@ const submit = () => {
     if (!categories.value || !city.value) {
         return;
     }
-    router.push({ name: 'result', params: { category: categories.value, city: city.value } });
+    router.push({
+        name: "result",
+        params: { category: categories.value, city: city.value },
+    });
 };
 </script>
 
@@ -47,7 +50,6 @@ const submit = () => {
                 <option value="divers">Divers</option>
             </select>
         </div>
-
 
         <div class="app-form_row">
             <select v-model="city">

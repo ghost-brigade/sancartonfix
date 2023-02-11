@@ -1,6 +1,5 @@
 <script setup>
-import SearchForm from '../components/forms/SearchForm.vue';
-
+import SearchForm from "../components/forms/SearchForm.vue";
 </script>
 
 <template>
@@ -28,9 +27,14 @@ import SearchForm from '../components/forms/SearchForm.vue';
         <div class="app-img_section_content">
             <h2>Le concept</h2>
             <p>
-                Nous avons pour objectif de fournir à l'ensemble des SDFs un logement décent.<br /><br />
-                Nous savons que les moyens disponibles par ces derniers ne sont pas grands mais qu'ils méritent d'avoir leur “AirBnb” afin de ne plus se sentir à l'écart de cette société.<br /><br />
-                C'est dans cette optique qu'est né “SanCartonFix”, l'application qui te permet de trouver ton carton, ton banc, ta tente, dans l'objectif de ne pas dormir directement sur le béton.
+                Nous avons pour objectif de fournir à l'ensemble des SDFs un
+                logement décent.<br /><br />
+                Nous savons que les moyens disponibles par ces derniers ne sont
+                pas grands mais qu'ils méritent d'avoir leur “AirBnb” afin de ne
+                plus se sentir à l'écart de cette société.<br /><br />
+                C'est dans cette optique qu'est né “SanCartonFix”, l'application
+                qui te permet de trouver ton carton, ton banc, ta tente, dans
+                l'objectif de ne pas dormir directement sur le béton.
             </p>
         </div>
     </section>
