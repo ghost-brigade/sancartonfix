@@ -4,7 +4,7 @@ class Users extends Api {
   constructor() {
     super();
     this.path = "/users";
-    this.forgotPasswordPath = "/forgot_password";
+    this.forgotPasswordPath = "/forgot_password/";
     this.validateAccountPath = "/validate_account";
   }
 
@@ -37,7 +37,7 @@ class Users extends Api {
    * @returns 204
    */
   async forgotPassword(data) {
-    return await this.post(`${this.forgotPasswordPath}`, data);
+    return await this.post(`${this.forgotPasswordPath}`, data, false);
   }
 
   /**
@@ -47,7 +47,7 @@ class Users extends Api {
    *
    */
   async resetPassword(token, data) {
-    return await this.post(`${this.forgotPasswordPath}/${token}`, data);
+    return await this.post(`${this.forgotPasswordPath}${token}`, data);
   }
 
 

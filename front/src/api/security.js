@@ -16,7 +16,7 @@ class Security extends Api {
 
           const res = await returned?.json();
 
-          if(returned.ok) {
+          if(returned?.ok) {
             const token = res.token;
 
             if (token) {
