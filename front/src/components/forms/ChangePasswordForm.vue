@@ -1,13 +1,13 @@
 <script setup>
-import { ref, onMounted, inject } from 'vue';
+import { ref, onMounted, inject } from "vue";
 import { SECURITY_currentUser } from "@/providers/ProviderKeys";
-import { useRouter } from 'vue-router';
-import {Users} from "@/api/users";
+import { useRouter } from "vue-router";
+import { Users } from "@/api/users";
 
-const password = ref('');
-const passwordCheck = ref('');
+const password = ref("");
+const passwordCheck = ref("");
 const loading = ref(false);
-const message = ref('');
+const message = ref("");
 
 const { currentUser, setCurrentUser } = inject(SECURITY_currentUser);
 const users = new Users();
@@ -15,43 +15,48 @@ const users = new Users();
 const router = useRouter();
 
 const reset = () => {
-    password.value = '';
-    passwordCheck.value = '';
-}
+    password.value = "";
+    passwordCheck.value = "";
+};
 
 const submit = async () => {
     if (password.value !== passwordCheck.value) {
-        message.value = 'Les mots de passe ne correspondent pas';
+        message.value = "Les mots de passe ne correspondent pas";
         reset();
         return;
     }
 
     if (password.value?.length < 8) {
-        message.value = 'Le mot de passe doit faire au moins 8 caractères';
+        message.value = "Le mot de passe doit faire au moins 8 caractères";
         reset();
         return;
     }
 
-   loading.value = true;
+    loading.value = true;
 
     try {
-        const response = await users.update(currentUser?.id, {
-            plainPassword: password.value
-        }, false);
+        const response = await users.update(
+            currentUser?.id,
+            {
+                plainPassword: password.value,
+            },
+            false
+        );
 
         if (response.ok) {
-            message.value = 'Le mot de passe a bien été modifié';
+            message.value = "Le mot de passe a bien été modifié";
         } else {
             const error = await response.json();
             message.value = error.message;
         }
     } catch (err) {
-        message.value = "Une erreur est survenue lors de la modification du mot de passe";
+        message.value =
+            "Une erreur est survenue lors de la modification du mot de passe";
     } finally {
         loading.value = false;
         reset();
     }
-}
+};
 </script>
 
 <template>
@@ -61,15 +66,23 @@ const submit = async () => {
         <div v-if="message">{{ message }}</div>
 
         <div class="app-form_row">
-            <input v-model="password" type="password" placeholder="Mot de passe">
+            <input
+                v-model="password"
+                type="password"
+                placeholder="Mot de passe"
+            />
         </div>
 
         <div class="app-form_row">
-            <input v-model="passwordCheck" type="password" placeholder="Vérifier le mot de passe">
+            <input
+                v-model="passwordCheck"
+                type="password"
+                placeholder="Vérifier le mot de passe"
+            />
         </div>
 
         <button type="submit" :disabled="loading">
-            {{ loading ? '...' : 'Connexion'}}
+            {{ loading ? "..." : "Connexion" }}
         </button>
     </form>
 </template>

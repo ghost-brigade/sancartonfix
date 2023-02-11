@@ -6,7 +6,7 @@ class Media extends Api {
     this.path = "/media";
   }
 
-  async findAll( page = 1, itemsPerPage = 20, filters = [], orders = {} ) {
+  async findAll(page = 1, itemsPerPage = 20, filters = [], orders = {}) {
     return await this.get(this.path, page, itemsPerPage, filters, orders);
   }
 

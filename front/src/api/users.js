@@ -49,8 +49,6 @@ class Users extends Api {
   async resetPassword(token, data) {
     return await this.post(`${this.forgotPasswordPath}/${token}`, data);
   }
-
-
 }
 
 export { Users };

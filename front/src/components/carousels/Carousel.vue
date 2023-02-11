@@ -1,15 +1,28 @@
 <template>
     <div class="carousel">
         <div class="carousel-inner">
-            <carousel-indicators v-if="indicators" :total="slides.length" :current-index="currentSlide"
-                @switch="switchSlide($event)"></carousel-indicators>
-            <carousel-item v-for="(slide, index) in slides" :img-url="slide.contentUrl" :key="`item-${index}`"
-                :current-slide="currentSlide" :index="index" :direction="direction"></carousel-item>
-            <carousel-controls v-if="controls" @prev="prev" @next="next"></carousel-controls>
+            <carousel-indicators
+                v-if="indicators"
+                :total="slides.length"
+                :current-index="currentSlide"
+                @switch="switchSlide($event)"
+            ></carousel-indicators>
+            <carousel-item
+                v-for="(slide, index) in slides"
+                :img-url="slide.contentUrl"
+                :key="`item-${index}`"
+                :current-slide="currentSlide"
+                :index="index"
+                :direction="direction"
+            ></carousel-item>
+            <carousel-controls
+                v-if="controls"
+                @prev="prev"
+                @next="next"
+            ></carousel-controls>
         </div>
     </div>
 </template>
-
 
 <script>
 import CarouselItem from "./CarouselItem.vue";

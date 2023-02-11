@@ -4,14 +4,11 @@ import { createPinia } from "pinia";
 import App from "./App.vue";
 import router from "./router";
 
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faBars, faClose } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faBars, faClose } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
-
-
-
-import { SetupCalendar } from 'v-calendar';
+import { SetupCalendar } from "v-calendar";
 
 // Setup plugin for defaults or `$screens` (optional)
 
@@ -25,6 +22,6 @@ const app = createApp(App);
 app.use(SetupCalendar, {});
 app.use(createPinia());
 app.use(router);
-app.component("FontAwesomeIcon", FontAwesomeIcon)
+app.component("FontAwesomeIcon", FontAwesomeIcon);
 
 app.mount("#app");

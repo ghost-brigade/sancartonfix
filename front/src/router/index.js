@@ -1,4 +1,4 @@
-import {createRouter, createWebHistory} from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
   {
@@ -8,7 +8,7 @@ const routes = [
     meta: {
       requiresAuth: false,
       roles: [],
-    }
+    },
   },
   {
     path: "/housing/:slug",
@@ -29,16 +29,16 @@ const routes = [
     meta: {
       requiresAuth: false,
       roles: [],
-    }
+    },
   },
   {
-    path: '/result/:category',
+    path: "/result/:category",
     name: "result",
     component: () => import("../views/ResultView.vue"),
     meta: {
       requiresAuth: true,
       roles: [],
-    }
+    },
   },
   {
     path: "/profile/renting",
@@ -47,7 +47,7 @@ const routes = [
     meta: {
       requiresAuth: true,
       roles: [],
-    }
+    },
   },
   {
     path: "/profile/housing",
@@ -56,7 +56,7 @@ const routes = [
     meta: {
       requiresAuth: true,
       roles: [],
-    }
+    },
   },
   {
     path: "/profile",
@@ -65,18 +65,18 @@ const routes = [
     meta: {
       requiresAuth: true,
       roles: [],
-    }
+    },
   },
   {
     path: "/login",
     name: "login",
     component: () => import("../views/LoginView.vue"),
-  }
+  },
 ];
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: routes
+  routes: routes,
 });
 
 router.beforeEach((to, from, next) => {
@@ -87,7 +87,7 @@ router.beforeEach((to, from, next) => {
       next({
         path: "/login",
         query: {
-          redirect: to.fullPath
+          redirect: to.fullPath,
         },
       });
     } else {

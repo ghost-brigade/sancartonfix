@@ -2,6 +2,7 @@
 import { ref, inject } from "vue";
 import { Housing } from "@/api/housing";
 import { SECURITY_currentUser } from "@/providers/ProviderKeys";
+import RedirectCard from "../../components/cards/RedirectCard.vue";
 const { currentUser } = inject(SECURITY_currentUser);
 
 const housings = ref({});
@@ -16,7 +17,7 @@ async function getData() {
         const data = await housingApi.findAll({
             page: page.value,
             itemsPerPage: 5,
-            filters: [{ property: 'owner', value: currentUser?.id }],
+            filters: [{ property: "owner", value: currentUser?.id }],
             orders: { property: "createdAt", direction: "DESC" },
         });
 
@@ -37,37 +38,55 @@ const handlePageChange = (newPage) => {
 </script>
 
 <template>
-    <div v-if="housings?.length > 0">
-        <h1>Ma liste de logements</h1>
-        <br />
-        <ul v-for="housing in housings" :key="housings.id">
-            <li>
-                <img
-                    :src="housing?.media?.contentUrl === undefined
-                            ? '/image/housing/default.jpg'
-                            : 'https://localhost/' + housing?.media?.contentUrl
-                    "
-                    :alt="housing?.slug + '-img'"
-                />
-                <h3><a :href="`/housing/${housing?.slug}`">{{ housing?.name }}</a></h3>
-                <span>Status: {{ housing?.active ? 'Actif' : 'Innactif' }}</span><br>
-                <span>Prix: {{ housing?.price }} EUR</span>
-            </li>
+    <section>
+        <div v-if="housings?.length > 0">
+            <h1>Ma liste de logements</h1>
+            <ul class="app-card_list">
+                <template v-for="housing in housings" :key="housings.id">
+                    <RedirectCard
+                        :redirect="`/housing/${renting?.housing?.slug}`"
+                    >
+                        <template #image>
+                            <img
+                                :src="
+                                    housing?.media?.contentUrl === undefined
+                                        ? '/image/housing/default.jpg'
+                                        : 'https://localhost/' +
+                                          housing?.media?.contentUrl
+                                "
+                                :alt="housing?.slug + '-img'"
+                            />
+                        </template>
+
+                        <h3>
+                            <a :href="`/housing/${housing?.slug}`">{{
+                                housing?.name
+                            }}</a>
+                        </h3>
+                        <span
+                            >Status:
+                            {{ housing?.active ? "Actif" : "Innactif" }}</span
+                        ><br />
+                        <span>Prix: {{ housing?.price }} EUR</span>
+                    </RedirectCard>
+                </template>
+            </ul>
+
             <br />
-        </ul>
 
-        <br />
-
-        <div>
-            <div v-if="views['hydra:next']">
-                <button @click="handlePageChange(page + 1)">Next</button>
-            </div>
-            <div v-if="views['hydra:previous']">
-                <button @click="handlePageChange(page - 1)">Previous</button>
+            <div>
+                <div v-show="views['hydra:next']">
+                    <button @click="handlePageChange(page + 1)">Next</button>
+                </div>
+                <div v-show="views['hydra:previous']">
+                    <button @click="handlePageChange(page - 1)">
+                        Previous
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
-    <div v-else>
-        <h2>Aucune logement trouvée</h2>
-    </div>
+        <div v-else>
+            <h2>Aucune logement trouvée</h2>
+        </div>
+    </section>
 </template>

@@ -18,7 +18,11 @@ async function getData() {
     ];
 
     const housingApi = new Housing();
-    const response = await housingApi.findAll({page: 1, itemsPerPage: 20, filters});
+    const response = await housingApi.findAll({
+        page: 1,
+        itemsPerPage: 20,
+        filters,
+    });
     housing.value = response["hydra:member"][0] ?? null;
 
     disabledDays.value = housing.value.rentings.map((renting) => {

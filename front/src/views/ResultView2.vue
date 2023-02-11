@@ -1,21 +1,18 @@
 <script setup>
-import SearchForm from '../components/forms/SearchForm.vue';
-import { Housing } from '../api/housing.js';
-import { ref } from 'vue';
+import SearchForm from "../components/forms/SearchForm.vue";
+import { Housing } from "../api/housing.js";
+import { ref } from "vue";
 import Carousel from "../components/carousels/Carousel.vue";
-
-
 
 const housings = ref([]);
 async function getDataHousing() {
-	const housingsApi = new Housing();
+    const housingsApi = new Housing();
 
-	const responseHousing = await housingsApi.findAll()
-	housings.value = responseHousing['hydra:member'];
-	console.log(housings.value);
+    const responseHousing = await housingsApi.findAll();
+    housings.value = responseHousing["hydra:member"];
+    console.log(housings.value);
 }
-getDataHousing()
-
+getDataHousing();
 </script>
 <!-- 
 <template>
@@ -32,21 +29,15 @@ getDataHousing()
 	</div>
 </template> -->
 <template>
-	<carousel :slides="slides" :interval="1000" controls indicators></carousel>
+    <carousel :slides="slides" :interval="1000" controls indicators></carousel>
 </template>
 
-  
 <script>
 export default {
-	name: "App",
-	components: { Carousel },
-	data: () => ({
-		housings: ref([]),
-	}),
-
-}
-
+    name: "App",
+    components: { Carousel },
+    data: () => ({
+        housings: ref([]),
+    }),
+};
 </script>
-  
-
-
