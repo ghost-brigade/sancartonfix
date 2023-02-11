@@ -78,6 +78,17 @@ onMounted(() => {
             />
         </div>
 
+        <div class="app-form_row" style="
+            text-decoration: underline;
+            font-size: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+        ">
+            <router-link to="/forgot-password">Mot de passe oublié</router-link>
+            <router-link to="/register">Créer un compte</router-link>
+        </div>
+
+
         <button type="submit" :disabled="loading">
             {{ loading ? "..." : "Connexion" }}
         </button>
