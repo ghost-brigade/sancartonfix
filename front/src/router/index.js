@@ -32,6 +32,15 @@ const routes = [
     }
   },
   {
+    path: '/result/:category',
+    name: "result",
+    component: () => import("../views/ResultView.vue"),
+    meta: {
+      requiresAuth: true,
+      roles: [],
+    }
+  },
+  {
     path: "/profile/renting",
     name: "profile-renting",
     component: () => import("../views/profile/RentingView.vue"),

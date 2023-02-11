@@ -8,7 +8,9 @@ use Doctrine\Persistence\ObjectManager;
 
 class CityFixtures extends Fixture
 {
+    public const REFERENCE = 'city-';
     public function load(ObjectManager $manager): void {
+        
         $datas = json_decode(file_get_contents(__DIR__ . '/data/cities.json'), true);
 
         $codes = [];
@@ -17,15 +19,12 @@ class CityFixtures extends Fixture
                 continue;
             } else {
                 $city = new City();
-                $city->setPostalCode(intval($data['Code_postal']));
+                $city->setZipCode(intval($data['Code_postal']));
                 $city->setName($data['Nom_commune']);
-                $coords = explode(',', $data['coordonnees_gps']);
-
-                $city->setLatitude(floatval(trim($coords[0] ?? null)));
-                $city->setLongitude(floatval(trim($coords[1] ?? null)));
 
                 $manager->persist($city);
                 $codes[] = $data['Code_postal'];
+                $this->setReference(self::REFERENCE . $city->getZipCode(), $city);
             }
         }
 
@@ -33,8 +32,4 @@ class CityFixtures extends Fixture
     }
 
     public function getDependencies() {}
-
-    public function getOrder() {
-        return 2;
-    }
 }

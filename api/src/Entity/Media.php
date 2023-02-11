@@ -88,6 +88,18 @@ class Media
         return $this->id;
     }
 
+    public function getFilePath(): ?string
+    {
+        return $this->filePath;
+    }
+
+    public function setFilePath(?string $filePath): self
+    {
+        $this->filePath = $filePath;
+
+        return $this;
+    }
+
     public function getHousing(): ?Housing
     {
         return $this->housing;

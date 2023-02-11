@@ -29,7 +29,7 @@ reset:
 	@echo "Resetting database..."
 	@docker-compose exec php php bin/console doctrine:database:drop --force
 	@docker-compose exec php php bin/console doctrine:database:create
-	@docker-compose exec php php bin/console doctrine:migrations:migrate --no-interaction
+
 	@docker-compose exec php php bin/console doctrine:fixtures:load --no-interaction
 	@echo "Database reset."
 
@@ -53,3 +53,9 @@ clear:
 	@echo "Clearing cache..."
 	@docker-compose exec php php bin/console cache:clear
 	@echo "Cache cleared."
+
+dtc:
+	@docker compose exec php bin/console d:d:d --force
+	@docker compose exec php bin/console d:d:c
+	@docker compose exec php bin/console d:s:u --force
+	

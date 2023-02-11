@@ -33,6 +33,7 @@ security:
 
     access_control:
         - { path: ^/users, methods: Post, roles: PUBLIC_ACCESS }
+        - { path: ^/housings, roles: PUBLIC_ACCESS }
         - { path: ^/docs, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI
         - { path: ^/authentication_token, roles: PUBLIC_ACCESS }
         - { path: ^/forgot-password, role: PUBLIC_ACCESS }

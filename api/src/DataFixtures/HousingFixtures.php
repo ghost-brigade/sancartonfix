@@ -47,6 +47,8 @@ class HousingFixtures extends Fixture implements DependentFixtureInterface
             $housing->setOwner($user);
             $housing->setCategory($category ?? null);
             $housing->setActive($faker->boolean);
+            // dd($this->getReference(CityFixtures::REFERENCE . "75001"));
+            $housing->setCity($this->getReference(CityFixtures::REFERENCE . "75001"));
 
             $manager->persist($housing);
 
@@ -61,6 +63,7 @@ class HousingFixtures extends Fixture implements DependentFixtureInterface
     {
         return [
             UserFixtures::class,
+            CityFixtures::class,
         ];
     }
 
