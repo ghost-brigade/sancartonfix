@@ -64,6 +64,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
         'city.name' => 'exact',
         'city.zipCode' => 'exact',
         'owner' => 'exact',
+        'slug' => 'exact',
+        'rentings.status' => 'exact',
     ]
 )]
 #[ApiFilter(
