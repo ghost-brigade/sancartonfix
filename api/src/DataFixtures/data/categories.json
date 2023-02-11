@@ -1,7 +1,5 @@
 [
     {"name": "Carton"},
     {"name": "Tente"},
-    {"name": "Banc"},
-    {"name": "Ascenseur"},
-    {"name": "Divers"}
+    {"name": "Banc"}
 ]

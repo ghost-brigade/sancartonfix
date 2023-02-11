@@ -1,0 +1,44 @@
+{
+    "banc": [
+        "banc1.jpg",
+        "banc2.jpg",
+        "banc3.jpg",
+        "banc4.jpg",
+        "banc5.jpg",
+        "banc6.jpg",
+        "banc7.jpg",
+        "banc8.jpg",
+        "banc9.jpg",
+        "banc10.jpg",
+        "banc11.jpg",
+        "banc12.jpg"
+    ],
+    "carton": [
+        "carton1.jpg",
+        "carton2.jpg",
+        "carton3.jpg",
+        "carton4.jpg",
+        "carton5.jpg",
+        "carton6.jpg",
+        "carton7.jpg",
+        "carton8.jpg",
+        "carton9.jpg",
+        "carton10.jpg",
+        "carton11.jpg",
+        "carton12.jpg"
+    ],
+    "tente": [
+        "tente1.jpg",
+        "tente2.jpg",
+        "tente3.jpg",
+        "tente4.jpg",
+        "tente5.jpg",
+        "tente6.jpg",
+        "tente7.jpg",
+        "tente8.jpg",
+        "tente9.jpg",
+        "tente10.jpg",
+        "tente11.jpg",
+        "tente12.jpg"
+    ]
+}

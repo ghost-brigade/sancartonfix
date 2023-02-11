@@ -5,6 +5,46 @@
     "category": "Tente"
   },
   {
+    "name": "Banc confortable",
+    "description": "La solution idéale pour ceux qui aiment dormir en extérieur, mais préfèrent un peu plus de soutien pour le dos.",
+    "category": "Banc"
+  },
+  {
+    "name": "Refuge de fortune",
+    "description": "Pour les amateurs de bricolage et de vie en plein air, un abri de fortune peut être construit avec des matériaux de récupération.",
+    "category": "Carton"
+  },
+  {
+    "name": "Château de carton",
+    "description": "Pour les rois et les reines de la rue, un château de carton est le choix parfait pour dormir comme un prince ou une princesse.",
+    "category": "Carton"
+  },
+  {
+    "name": "Tente-igloo",
+    "description": "Pour les aventuriers de l'extrême, une tente-igloo est le choix idéal pour dormir en toute sécurité et en toute chaleur.",
+    "category": "Tente"
+  },
+  {
+    "name": "Cabine téléphonique",
+    "description": "Pour les amateurs de vie urbaine, une cabine téléphonique peut être transformée en un abri de fortune pour passer la nuit.",
+    "category": "Banc"
+  },
+  {
+    "name": "Tente-hamac",
+    "description": "Pour les amateurs de vie en plein air et de confort, une tente-hamac est le choix parfait pour dormir confortablement en hauteur.",
+    "category": "Tente"
+  },
+  {
+    "name": "Abri de bus",
+    "description": "Pour les amateurs de transport en commun, un abri de bus peut être utilisé pour passer la nuit en toute sécurité.",
+    "category": "Banc"
+  },
+  {
+    "name": "Sous-sol abandonné",
+    "description": "Pour les amateurs de vie urbaine et de mystère, un sous-sol abandonné peut être utilisé pour passer la nuit en toute discrétion.",
+    "category": "Carton"
+  },
+  {
     "name": "Tente de luxe",
     "description": "Le camping sauvage, mais en mieux ! Avec une vue imprenable sur les étoiles.",
     "category": "Tente"
@@ -15,19 +55,14 @@
     "category": "Banc"
   },
   {
-    "name": "Ascenseur roulant",
-    "description": "Pour les amoureux de l'aventure et de la vie nocturne de la ville.",
-    "category": "Ascenseur"
-  },
-  {
     "name": "Refuge de fortune",
     "description": "Pour les amateurs de bricolage et de vie en plein air, un abri de fortune peut être construit avec des matériaux de récupération.",
-    "category": "Divers"
+    "category": "Carton"
   },
   {
     "name": "Château de carton",
     "description": "Pour les rois et les reines de la rue, un château de carton est le choix parfait pour dormir comme un prince ou une princesse.",
-    "category": "Divers"
+    "category": "Carton"
   },
   {
     "name": "Tente-igloo",
@@ -37,7 +72,7 @@
   {
     "name": "Cabine téléphonique",
     "description": "Pour les amateurs de vie urbaine, une cabine téléphonique peut être transformée en un abri de fortune pour passer la nuit.",
-    "category": "Divers"
+    "category": "Banc"
   },
   {
     "name": "Tente-hamac",
@@ -47,21 +82,11 @@
   {
     "name": "Abri de bus",
     "description": "Pour les amateurs de transport en commun, un abri de bus peut être utilisé pour passer la nuit en toute sécurité.",
-    "category": "Divers"
+    "category": "Banc"
   },
   {
     "name": "Sous-sol abandonné",
     "description": "Pour les amateurs de vie urbaine et de mystère, un sous-sol abandonné peut être utilisé pour passer la nuit en toute discrétion.",
-    "category": "Divers"
-  },
-  {
-    "name": "Entrepôt abandonné",
-    "description": "Pour les amateurs de bricolage et de vie en plein air, un entrepôt abandonné peut être utilisé pour dormir en toute sécurité.",
-    "category": "Divers"
-  },
-  {
-    "name": "Parking souterrain",
-    "description": "Pour les amateurs de vie urbaine et de sécurité, un parking souterrain peut être utilisé pour passer la nuit en toute discrétion.",
-    "category": "Divers"
+    "category": "Carton"
   }
 ]
