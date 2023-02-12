@@ -7,6 +7,6 @@ import HousingForm from '../../components/forms/HousingForm.vue';
     <section>
         <h1>Créer un logement</h1>
 
-        <HousingForm :type="create"/>
+        <HousingForm :type="'create'"/>
     </section>
 </template>

@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { GoogleMap, Marker } from "vue3-google-map";
 import { Housing } from "@/api/housing";
+import CategoriesOptions from './CategoriesOptions.vue';
 
 const props = defineProps({
     housing: {
@@ -27,10 +28,10 @@ const submit = async () => {
     const data = {
         name: name.value,
         description: description.value,
-        latitude: parseFloat(latitude.value),
-        longitude: parseFloat(longitude.value),
-        price: parseFloat(price.value),
-        category: category.value,
+        latitude: parseFloat(latitude.value).toFixed(7),
+        longitude: parseFloat(longitude.value).toFixed(7),
+        price: parseFloat(price.value).toFixed(2),
+        category: `/api/categories/${category.value}`,
     }
 
     if (props.type === 'create') {
@@ -44,6 +45,7 @@ const submit = async () => {
 
 const API_KEY = import.meta.env.VITE_MAPS_API_KEY;
 const selectOnMap = (event) => {
+    // Float with 7 decimals
     latitude.value = event.latLng.lat();
     longitude.value = event.latLng.lng();
 }
@@ -69,11 +71,7 @@ const selectOnMap = (event) => {
         <div class="app-form_row">
             <label for="category">Catégorie</label>
             <select id="category" v-model="category">
-                <option value="carton">Carton</option>
-                <option value="tente">Tente</option>
-                <option value="banc">Banc</option>
-                <option value="ascenseur">Ascenseur</option>
-                <option value="divers">Divers</option>
+                <CategoriesOptions />
             </select>
         </div>
 
