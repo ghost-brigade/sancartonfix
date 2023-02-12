@@ -179,7 +179,7 @@ class Housing
     #[ORM\ManyToOne(inversedBy: 'housings')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['housing_read', 'renting_read'])]
-    #[ApiProperty(readable: true, writable: false, example: '/api/users/{id}', securityPostDenormalize: 'is_granted("ROLE_ADMIN")')]
+    #[ApiProperty(readable: true, writable: false, example: '/users/{id}', securityPostDenormalize: 'is_granted("ROLE_ADMIN")')]
     #[Gedmo\Blameable(on: 'create')]
     private ?User $owner = null;
 
@@ -190,8 +190,8 @@ class Housing
     #[ORM\ManyToOne(inversedBy: 'housings')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['housing_read', 'housing_write'])]
-    #[ApiProperty(readable: true, writable: true, example: '/api/category/{id}')]
-    private ?Category $Category = null;
+    #[ApiProperty(readable: true, writable: true, example: '/categories/{id}')]
+    private ?Category $category = null;
 
     #[ORM\OneToMany(mappedBy: 'housing', targetEntity: Like::class)]
     #[Groups(['housing_read'])]
@@ -431,12 +431,12 @@ class Housing
 
     public function getCategory(): ?Category
     {
-        return $this->Category;
+        return $this->category;
     }
 
-    public function setCategory(?Category $Category): self
+    public function setCategory(?Category $category): self
     {
-        $this->Category = $Category;
+        $this->category = $category;
 
         return $this;
     }
