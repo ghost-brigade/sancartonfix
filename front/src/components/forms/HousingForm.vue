@@ -31,7 +31,7 @@ const submit = async () => {
         latitude: parseFloat(latitude.value).toFixed(7),
         longitude: parseFloat(longitude.value).toFixed(7),
         price: parseFloat(price.value).toFixed(2),
-        category: `/api/categories/${category.value}`,
+        category: `/categories/${category.value}`,
     }
 
     if (props.type === 'create') {
