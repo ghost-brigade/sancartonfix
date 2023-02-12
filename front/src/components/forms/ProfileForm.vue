@@ -3,18 +3,6 @@ import { inject, ref, watch } from "vue";
 import { SECURITY_currentUser } from "@/providers/ProviderKeys";
 import { Users } from "@/api/users";
 
-/**
- * "id": "1ed98034-ff73-61f2-acdc-f91a37951843",
-	"email": "admin@localhost",
-	"roles": [
-		"ROLE_ADMIN",
-		"ROLE_USER"
-	],
-	"firstname": "Julien",
-	"lastname": "Bélix",
-	"gender": true
- */
-
 const loading = ref(false);
 
 const { currentUser, setCurrentUser } = inject(SECURITY_currentUser);

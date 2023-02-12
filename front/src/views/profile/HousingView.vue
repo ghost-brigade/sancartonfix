@@ -3,6 +3,7 @@ import { ref, inject } from "vue";
 import { Housing } from "@/api/housing";
 import { SECURITY_currentUser } from "@/providers/ProviderKeys";
 import RedirectCard from "../../components/cards/RedirectCard.vue";
+import { RouterLink } from "vue-router";
 const { currentUser } = inject(SECURITY_currentUser);
 
 const housings = ref({});
@@ -40,7 +41,14 @@ const handlePageChange = (newPage) => {
 <template>
     <section>
         <div v-if="housings?.length > 0">
-            <h1>Ma liste de logements</h1>
+            <div :style="{display: 'flex', justifyContent: 'space-between', marginBottom: '1rem'}">
+                <h1>Ma liste de logements</h1>
+                
+                <RouterLink to="/profile/housing/create">
+                    <button>Créer un logement</button>
+                </RouterLink>
+            </div>
+
             <ul class="app-card_list">
                 <template v-for="housing in housings" :key="housings.id">
                     <RedirectCard
