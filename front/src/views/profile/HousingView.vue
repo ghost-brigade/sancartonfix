@@ -3,6 +3,8 @@ import { ref, inject } from "vue";
 import { Housing } from "@/api/housing";
 import { SECURITY_currentUser } from "@/providers/ProviderKeys";
 import RedirectCard from "../../components/cards/RedirectCard.vue";
+import Api from "../../api/api";
+
 const { currentUser } = inject(SECURITY_currentUser);
 
 const housings = ref({});
@@ -51,7 +53,7 @@ const handlePageChange = (newPage) => {
                                 :src="
                                     housing?.media?.contentUrl === undefined
                                         ? '/image/housing/default.jpg'
-                                        : import.meta.env.VITE_API_URL + '/' +
+                                        : Api.url + '/' +
                                           housing?.media?.contentUrl
                                 "
                                 :alt="housing?.slug + '-img'"

@@ -50,7 +50,7 @@ function rentThisHousing() {
         <h1 v-if="housing.name">{{ housing.name }}</h1>
         <img
             v-for="image in housing.media"
-            :src="import.meta.env.VITE_API_URL + '/' + image.contentUrl"
+            :src="Api.url + '/' + image.contentUrl"
         />
         <h2 v-if="housing.price">Prix : {{ housing.price }} €</h2>
 
