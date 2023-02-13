@@ -59,8 +59,6 @@ final class RentingCancelSubscriber implements EventSubscriberInterface
         $now = new \DateTimeImmutable();
         $rentingDate = $renting->getDateStart();
         $minDate = $rentingDate->sub(new \DateInterval('P2D'));
-        var_dump($now);
-        var_dump($minDate);
         if ($now > $minDate) {
             throw new \Exception('Vous ne pouvez pas annuler une réservation moins de 2 jours avant la date de réservation');
         }

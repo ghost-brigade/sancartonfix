@@ -4,6 +4,7 @@ import {Renting} from "@/api/renting";
 import moment from "../../utils/date";
 import RedirectCard from "../../components/cards/RedirectCard.vue";
 import {Api} from "../../api/api";
+import Swal from 'sweetalert2'
 
 const rentings = ref({});
 
@@ -13,7 +14,6 @@ const page = ref(1);
 const message = ref("");
 
 const rentingApi = new Renting();
-import Swal from 'sweetalert2'
 
 async function getData() {
 
@@ -37,22 +37,14 @@ const cancelRenting = async (renting) => {
         // await rentingApi.del(renting.id);
 
         const response = await rentingApi.remove(renting.id, false);
-
+    console.log(response)
         if (response.ok) {
-            message.value = "La location " + renting.housing.name + " a bien été annulée";
-            Swal.fire({
-                title: 'Validation',
-                text: "La location " + renting.housing.name + " a bien été annulée",
-                icon: 'success',
-            });
+            // message.value = "La location " + renting.housing.name + " a bien été annulée";
+            await Swal.fire({title: "Validation", text: "La location " + renting.housing.name + " a bien été annulée", icon: "success"});
         } else {
             const error = await response.json();
-            Swal.fire({
-                title: 'Erreur',
-                text: error["hydra:description"],
-                icon: 'error',
-            });
-            message.value = error["hydra:description"];
+            await Swal.fire({title: "Erreur", text: error["hydra:description"], icon: "error"});
+            // message.value = error["hydra:description"];
         }
     } catch (err) {
         console.log(err)
