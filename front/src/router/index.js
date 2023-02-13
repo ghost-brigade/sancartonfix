@@ -118,7 +118,16 @@ const routes = [
     props: (route) => ({
       token: route.params.token,
     })
-  }
+  },
+  {
+    path: "/profile/likes",
+    name: "profile-likes",
+    component: () => import("../views/profile/HousingLikedView.vue"),
+    meta: {
+      requiresAuth: true,
+      roles: [],
+    },
+  },
 ];
 
 const router = createRouter({
