@@ -93,6 +93,18 @@ const routes = [
     props: (route) => ({
       token: route.params.token,
     })
+  },
+  {
+    path: "/housing/update/:slug",
+    name: "housing-update",
+    component: () => import("../views/profile/UpdateHousingView.vue"),
+    meta: {
+      requiresAuth: true,
+      roles: [],
+    },
+    props: (route) => ({
+      slug: route.params.slug,
+    }),
   }
 ];
 

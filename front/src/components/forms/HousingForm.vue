@@ -1,8 +1,9 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { GoogleMap, Marker } from "vue3-google-map";
 import { Housing } from "@/api/housing";
 import CategoriesOptions from './CategoriesOptions.vue';
+
 
 const props = defineProps({
     housing: {
@@ -16,13 +17,21 @@ const props = defineProps({
     },
 });
 
+console.log(props.housing);
 const name = ref(props.housing?.name ?? "");
 const description = ref(props.housing?.description ?? "");
 const latitude = ref(props.housing?.latitude ?? 0);
 const longitude = ref(props.housing?.longitude ?? 0);
 const price = ref(props.housing?.price ?? 1);
 const category = ref(props.housing?.category ?? null);
-
+watch(props.housing, () => {
+    name.value = props.housing?.name ?? "";
+    description.value = props.housing?.description ?? "";
+    latitude.value = props.housing?.latitude ?? 0;
+    longitude.value = props.housing?.longitude ?? 0;
+    price.value = props.housing?.price ?? 1;
+    category.value = props.housing?.category ?? null;
+});
 const housingAPI = new Housing();
 const submit = async () => {
     const data = {
@@ -38,6 +47,7 @@ const submit = async () => {
         const newHousing = await housingAPI.create(data);
         console.log(newHousing);
     } else if (props.type === 'update') {
+        console.log(props.housing.id);
         const updatedHousing = await housingAPI.update(props.housing.id, data);
         console.log(updatedHousing);
     }

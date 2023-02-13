@@ -4,6 +4,7 @@ import { Housing } from "@/api/housing";
 import { SECURITY_currentUser } from "@/providers/ProviderKeys";
 import RedirectCard from "../../components/cards/RedirectCard.vue";
 import { RouterLink } from "vue-router";
+
 const { currentUser } = inject(SECURITY_currentUser);
 
 const housings = ref({});
@@ -52,7 +53,7 @@ const handlePageChange = (newPage) => {
             <ul class="app-card_list">
                 <template v-for="housing in housings" :key="housings.id">
                     <RedirectCard
-                        :redirect="`/housing/${renting?.housing?.slug}`"
+                        :redirect="`/housing/${housing?.slug}`"
                     >
                         <template #image>
                             <img

@@ -5,16 +5,18 @@ import { useRoute } from "vue-router";
 import { DatePicker } from "v-calendar";
 import "v-calendar/dist/style.css";
 
+
 const housing = ref([]);
 const disabledDays = ref([]);
 const date = ref(null);
 
 const { slug } = useRoute().params;
 
+
 async function getData() {
     const filters = [
         { property: "slug", value: slug },
-        { property: "rentings.status", value: false },
+        // { property: "rentings.status", value: false },
     ];
 
     const housingApi = new Housing();
