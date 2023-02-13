@@ -11,11 +11,15 @@
     </transition>
 </template>
 
-<script setup>
-import {Api} from "@/api/api";
-</script>
 <script>
+import { Api } from "@/api/api";
+
 export default {
+    setup() {
+        return {
+            Api,
+        };
+    },
     props: {
         imgUrl: {
             type: String,
