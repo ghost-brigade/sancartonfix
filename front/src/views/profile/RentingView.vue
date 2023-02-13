@@ -10,6 +10,7 @@ const rentings = ref({});
 const items = ref(0);
 const views = ref({});
 const page = ref(1);
+const message = ref("");
 
 const rentingApi = new Renting();
 
@@ -31,21 +32,22 @@ const cancelRenting = async (renting) => {
     console.log(renting)
     try {
         const rentingApi = new Renting();
-        await rentingApi.del(renting.id);
+        // await rentingApi.del(renting.id);
 
-        const response = await rentingApi.del(renting.id);
+        const response = await rentingApi.remove(renting.id, false);
 
         if (response.ok) {
-            message.value = "Le mot de passe a bien été modifié";
+            message.value = "La location " + renting.housing.name + " a bien été annulée";
         } else {
             const error = await response.json();
-            message.value = error.message;
+            message.value = error["hydra:description"];
         }
     } catch (err) {
-        message.value =
-            "Une erreur est survenue lors de la modification du mot de passe";
+        console.log(err)
+
+        message.value = err.message;
     }
-    // getData();
+    await getData();
 };
 
 const handlePageChange = (newPage) => {
@@ -56,6 +58,8 @@ const handlePageChange = (newPage) => {
 
 <template>
     <section>
+        <div v-if="message">{{ message }}</div>
+
         <div v-if="rentings.length > 0">
             <h1>Mes locations</h1>
             <ul class="app-card_list">
