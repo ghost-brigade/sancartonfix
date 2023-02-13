@@ -77,9 +77,8 @@ class Like
 
     #[ORM\ManyToOne(inversedBy: 'likes')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Assert\NotNull]
     #[Groups(['like_read'])]
-    #[ApiProperty(writable: false, readable: true, required: true, example: '/api/users/{id}', description: 'The user who liked the housing.')]
+    #[ApiProperty(writable: false, readable: true, required: true, example: '/users/{id}', description: 'The user who liked the housing.')]
     #[Gedmo\Blameable(on: 'create')]
     private ?User $author = null;
 
@@ -87,7 +86,7 @@ class Like
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\NotNull]
     #[Groups(['like_read', 'like_write'])]
-    #[ApiProperty(writable: true, readable: true, required: true, example: '/api/housings/{id}', description: 'The housing liked by the user.')]
+    #[ApiProperty(writable: true, readable: true, required: true, example: '/housings/{id}', description: 'The housing liked by the user.')]
     private ?Housing $housing = null;
 
     public function getId(): ?Uuid

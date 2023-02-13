@@ -31,6 +31,9 @@ const closeMenu = () => {
                 <RouterLink :to="{ name: 'profile-housing' }" @click="closeMenu"
                     >Mes logements</RouterLink
                 >
+                <RouterLink to="/profile/likes" @click="closeMenu">
+                    Mes favoris
+                </RouterLink>
             </template>
             <RouterLink to="/profile" @click="closeMenu">
                 {{ currentUser.id ? "Profil" : "Connexion " }}

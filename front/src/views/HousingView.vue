@@ -1,12 +1,13 @@
 <script setup>
 import { Housing } from "@/api/housing";
-import { ref, inject } from "vue";
+import { ref, inject, reactive } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { DatePicker } from "v-calendar";
 import "v-calendar/dist/style.css";
 import { Api } from "@/api/api";
 import { Renting } from "@/api/renting";
 import { SECURITY_currentUser } from "@/providers/ProviderKeys";
+import { Like } from "@/api/like";
 import Swal from "sweetalert2";
 const { currentUser } = inject(SECURITY_currentUser);
 
@@ -22,6 +23,41 @@ const owner = ref(false);
 const isOwner = () => {
     owner.value = housing.value.owner === `/users/${currentUser?.id}`;
 }
+
+const liked = reactive({ liked: false });
+
+const likeApi = new Like();
+const likeHousing = async () => {
+    if (liked.id) {
+        const newLike = await likeApi.create({
+            "liked": true,
+            "housing": "/housings/" + housing.value.id
+        });
+        Object.assign(liked, newLike);
+    } else {
+        const updatedLiked = await likeApi.update(liked.id, {
+            "liked": !liked?.liked ?? false,
+            "housing": "/housings/" + housing.value.id
+        });
+        Object.assign(liked, updatedLiked);
+    }
+}
+const loadLiked = async () => {
+    const filters = [
+        { property: "housing", value: housing.value.id },
+    ];
+
+    const response = await likeApi.findAll({
+        page: 1,
+        itemsPerPage: 20,
+        filters,
+    });
+    if (response["hydra:member"] && response["hydra:member"].length) {
+        const dataFound = response["hydra:member"][0] ?? null;
+        Object.assign(liked, dataFound);
+    }
+}
+
 
 async function getData() {
     const filters = [
@@ -44,6 +80,7 @@ async function getData() {
         };
     });
     isOwner();
+    loadLiked();
 }
 
 getData();
@@ -103,7 +140,13 @@ async function rentThisHousing() {
             <div v-if="message" class="app-form_outside_message">
                 {{ message }}
             </div>
-            <button @click="rentThisHousing()">Réserver</button>
+            <div>
+                <button @click="rentThisHousing()">Réserver</button>
+                <button @click="likeHousing()">
+                    {{ liked?.liked ? "Je n'aime plus" : "J'aime" }}
+                </button>
+            </div>
+
         </template>
     </div>
 
@@ -117,14 +160,6 @@ export default {
         const date = ref(null);
         return { date };
     },
-    // data() {
-    //     return {
-    //         disabledDays: []
-    //     }
-    // },
-    // mounted() {
-    //
-    // },
     methods: {
         selectRange(date) {
             console.log(`Selected range: ${date.start} - ${date.end}`);
