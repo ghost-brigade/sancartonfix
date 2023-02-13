@@ -84,7 +84,12 @@ const routes = [
     props: (route) => ({
       token: route.params.token,
     })
-  }
+  },
+  {
+    path: "/register",
+    name: "register",
+    component: () => import("../views/RegistrationView.vue"),
+  },
 ];
 
 const router = createRouter({
