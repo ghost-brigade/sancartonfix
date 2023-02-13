@@ -15,7 +15,7 @@ class Renting extends Api {
   }
 
   async create(data) {
-    return await this.post(this.path, data);
+    return await this.post(this.path, data, false);
   }
 
   async update(id, data) {
