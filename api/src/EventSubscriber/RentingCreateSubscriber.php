@@ -107,7 +107,7 @@ final class RentingCreateSubscriber implements EventSubscriberInterface
     private function checkUserHasEnoughMoney(User $user, float $price): void
     {
         if ($user->getBalance() < $price) {
-            throw new \Exception('You do not have enough money to rent this housing');
+            throw new \Exception('Vous n\'avez pas assez d\'argent sur votre compte');
         }
 
         return;
@@ -118,11 +118,11 @@ final class RentingCreateSubscriber implements EventSubscriberInterface
         try {
             $email = (new TemplatedEmail())
                 ->from('no-reply@sancartonfix.mimso.net')
-                ->to($renting->getClient()->getEmail())
+                ->to($this->tokenStorage->getToken()->getUser()->getEmail())
                 ->subject('Confirmation de location')
                 ->htmlTemplate('emails/confirm-renting.html.twig')
                 ->context([
-                    'user' => $renting->getClient(),
+                    'user' => $this->tokenStorage->getToken()->getUser(),
                     'housing' => $renting->getHousing(),
                     'renting' => $renting,
                 ])
