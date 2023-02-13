@@ -1,17 +1,22 @@
 <script setup>
 import { Housing } from "@/api/housing";
-import { ref } from "vue";
+import { ref, inject } from "vue";
 import { useRoute } from "vue-router";
 import { DatePicker } from "v-calendar";
 import "v-calendar/dist/style.css";
+import { SECURITY_currentUser } from "@/providers/ProviderKeys";
 
-
+const { currentUser } = inject(SECURITY_currentUser);
 const housing = ref([]);
 const disabledDays = ref([]);
 const date = ref(null);
 
 const { slug } = useRoute().params;
-
+const owner = ref(false);
+const isOwner = () => {
+    owner.value = housing.value.owner === `/users/${currentUser?.id}`;
+    console.log(housing.value.owner);
+}
 
 async function getData() {
     const filters = [
@@ -35,6 +40,7 @@ async function getData() {
         };
     });
     console.log(disabledDays.value);
+    isOwner();
 }
 
 getData();
@@ -75,7 +81,10 @@ function rentThisHousing() {
             @change="submitRange"
         />
 
-        <button @click="rentThisHousing()">Réserver</button>
+        <RouterLink v-if="owner" :to="`/housing/update/${slug}`">
+            <button>Modifier mon logement</button>
+        </RouterLink>
+        <button v-else @click="rentThisHousing()">Réserver</button>
     </div>
 
     <p v-else>Aucun logement n'a été trouvé.</p>
