@@ -4,8 +4,8 @@ import { Security } from "@/api/security";
 import { SECURITY_currentUser } from "@/providers/ProviderKeys";
 import { useRouter } from "vue-router";
 
-const email = ref("admin@localhost");
-const password = ref("password");
+const email = ref("");
+const password = ref("");
 const loading = ref(false);
 const error = ref(null);
 
