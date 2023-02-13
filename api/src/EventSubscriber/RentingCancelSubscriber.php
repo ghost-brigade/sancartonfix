@@ -17,9 +17,11 @@ final class RentingCancelSubscriber implements EventSubscriberInterface
     public const FEES = 40;
 
     public function __construct(
-        private MailerInterface $mailer,
+        private MailerInterface        $mailer,
         private EntityManagerInterface $manager
-    ) {}
+    )
+    {
+    }
 
     public static function getSubscribedEvents()
     {
@@ -46,7 +48,7 @@ final class RentingCancelSubscriber implements EventSubscriberInterface
         $rentingDate = $renting->getDateStart();
 
         if ($rentingDate < $now) {
-            throw new \Exception('You can\'t cancel a renting in the past');
+            throw new \Exception('Vous ne pouvez pas annuler une réservation dans le passé');
         }
 
         return;
@@ -57,9 +59,10 @@ final class RentingCancelSubscriber implements EventSubscriberInterface
         $now = new \DateTimeImmutable();
         $rentingDate = $renting->getDateStart();
         $minDate = $rentingDate->sub(new \DateInterval('P2D'));
-
-        if ($now->diff($minDate)->days <= 2) {
-            throw new \Exception('You can\'t cancel a renting less than two days before');
+        var_dump($now);
+        var_dump($minDate);
+        if ($now > $minDate) {
+            throw new \Exception('Vous ne pouvez pas annuler une réservation moins de 2 jours avant la date de réservation');
         }
 
         return;
@@ -70,7 +73,7 @@ final class RentingCancelSubscriber implements EventSubscriberInterface
         $user = $renting->getClient();
         $amount = $renting->getPrice();
 
-        $date    = new \DateTime();
+        $date = new \DateTime();
         $minDate = $renting->getDateStart()->sub(new \DateInterval('P7D'));
         $maxDate = $renting->getDateStart()->sub(new \DateInterval('P2D'));
 
@@ -101,12 +104,11 @@ final class RentingCancelSubscriber implements EventSubscriberInterface
                     'user' => $renting->getClient(),
                     'housing' => $renting->getHousing(),
                     'renting' => $renting,
-                ])
-            ;
+                ]);
 
             $this->mailer->send($email);
         } catch (\Exception $e) {
-            throw new \Exception($e->getMessage() .'An error occured while sending the email');
+            throw new \Exception($e->getMessage() . 'An error occured while sending the email');
         }
     }
 
