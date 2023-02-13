@@ -24,5 +24,6 @@ defineProps({
             </div>
 
         </RouterLink>
+        <slot name="actions"></slot>
     </li>
 </template>

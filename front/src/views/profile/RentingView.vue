@@ -13,8 +13,10 @@ const page = ref(1);
 const message = ref("");
 
 const rentingApi = new Renting();
+import Swal from 'sweetalert2'
 
 async function getData() {
+
     const data = await rentingApi.findAll({
         page: page.value,
         itemsPerPage: 5,
@@ -38,8 +40,18 @@ const cancelRenting = async (renting) => {
 
         if (response.ok) {
             message.value = "La location " + renting.housing.name + " a bien été annulée";
+            Swal.fire({
+                title: 'Validation',
+                text: "La location " + renting.housing.name + " a bien été annulée",
+                icon: 'success',
+            });
         } else {
             const error = await response.json();
+            Swal.fire({
+                title: 'Erreur',
+                text: error["hydra:description"],
+                icon: 'error',
+            });
             message.value = error["hydra:description"];
         }
     } catch (err) {
@@ -67,6 +79,7 @@ const handlePageChange = (newPage) => {
                     <RedirectCard
                         :redirect="`/housing/${renting?.housing?.slug}`"
                     >
+
                         <template #image>
                             <img
                                 :src="
@@ -85,8 +98,11 @@ const handlePageChange = (newPage) => {
                             {{ moment(renting?.dateStart).format("DD/MM/YYYY") }} au
                             {{ moment(renting?.dateEnd).format("DD/MM/YYYY") }}</span
                         >
+
+                        <template #actions>
+                            <button @click="cancelRenting(renting)">Annuler</button>
+                        </template>
                     </RedirectCard>
-                    <button @click="cancelRenting(renting)">Annuler</button>
 
                 </template>
             </ul>
