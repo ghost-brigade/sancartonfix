@@ -23,7 +23,7 @@ onMounted(async () => {
     const token = localStorage.getItem("token");
     if (token) {
         const user = await security.profile();
-        if (user.id) {
+        if (user?.id) {
             setCurrentUser(user);
         } else {
             localStorage.removeItem("token");
