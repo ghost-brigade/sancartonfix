@@ -92,7 +92,7 @@ class Category
     #[ApiProperty(identifier: true, readable: true, writable: false)]
     private $slug;
 
-    #[ORM\OneToMany(mappedBy: 'Category', targetEntity: Housing::class)]
+    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Housing::class)]
     private Collection $housings;
 
     public function __construct()

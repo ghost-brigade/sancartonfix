@@ -191,7 +191,7 @@ class Housing
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['housing_read', 'housing_write'])]
     #[ApiProperty(readable: true, writable: true, example: '/api/category/{id}')]
-    private ?Category $Category = null;
+    private ?Category $category = null;
 
     #[ORM\OneToMany(mappedBy: 'housing', targetEntity: Like::class)]
     #[Groups(['housing_read'])]
@@ -431,12 +431,12 @@ class Housing
 
     public function getCategory(): ?Category
     {
-        return $this->Category;
+        return $this->category;
     }
 
-    public function setCategory(?Category $Category): self
+    public function setCategory(?Category $category): self
     {
-        $this->Category = $Category;
+        $this->category = $category;
 
         return $this;
     }
