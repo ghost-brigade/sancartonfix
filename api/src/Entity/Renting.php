@@ -85,14 +85,14 @@ class Renting
     #[ORM\ManyToOne(inversedBy: 'rentings')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['renting_read'])]
-    #[ApiProperty(readable: true, writable: false, required: true, example: '/api/users/{id}')]
+    #[ApiProperty(readable: true, writable: false, required: true, example: '/users/{id}')]
     #[Gedmo\Blameable(on: 'create')]
     private ?User $client = null;
 
     #[ORM\ManyToOne(inversedBy: 'rentings')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['renting_read', 'renting_write'])]
-    #[ApiProperty(readable: true, writable: true, required: true, example: '/api/housing/{id}')]
+    #[ApiProperty(readable: true, writable: true, required: true, example: '/housings/{id}')]
     private ?Housing $housing = null;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]

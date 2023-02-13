@@ -12,12 +12,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 final class RentingCreateSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private MailerInterface $mailer,
-        private EntityManagerInterface $manager
+        private EntityManagerInterface $manager,
+        private TokenStorageInterface $tokenStorage,
     ) {}
 
     public static function getSubscribedEvents()
@@ -91,7 +93,7 @@ final class RentingCreateSubscriber implements EventSubscriberInterface
     }
 
     private function payRenting(Renting $renting) {
-        $user = $renting->getClient();
+        $user = $this->tokenStorage->getToken()->getUser();
 
         $this->checkUserHasEnoughMoney($user, $renting->getPrice());
         $user->setBalance($user->getBalance() - $renting->getPrice());

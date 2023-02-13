@@ -4,15 +4,15 @@ import SearchForm from "../components/forms/SearchForm.vue";
 
 <template>
     <div class="app-home_illustrations">
-        <RouterLink to="/search/carton" class="app-home_illustration">
+        <RouterLink to="/result/carton" class="app-home_illustration">
             <img src="../assets/images/carton.png" />
             <h2>Cartons</h2>
         </RouterLink>
-        <RouterLink to="/search/banc" class="app-home_illustration">
+        <RouterLink to="/result/banc" class="app-home_illustration">
             <img src="../assets/images/banc.png" />
             <h2>Bancs</h2>
         </RouterLink>
-        <RouterLink to="/search/tente" class="app-home_illustration">
+        <RouterLink to="/result/tente" class="app-home_illustration">
             <img src="../assets/images/tente.png" />
             <h2>Tentes</h2>
         </RouterLink>

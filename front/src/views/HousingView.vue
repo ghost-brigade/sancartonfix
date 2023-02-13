@@ -1,21 +1,24 @@
 <script setup>
 import { Housing } from "@/api/housing";
 import { ref, inject } from "vue";
-import { useRoute } from "vue-router";
+import { SECURITY_currentUser } from "@/providers/ProviderKeys";
+import { useRoute, useRouter } from "vue-router";
 import { DatePicker } from "v-calendar";
 import "v-calendar/dist/style.css";
-import { SECURITY_currentUser } from "@/providers/ProviderKeys";
+import { Api } from "@/api/api";
+import { Renting } from "@/api/renting";
 
 const { currentUser } = inject(SECURITY_currentUser);
 const housing = ref([]);
 const disabledDays = ref([]);
 const date = ref(null);
 
+const message = ref(null);
+const router = useRouter();
 const { slug } = useRoute().params;
 const owner = ref(false);
 const isOwner = () => {
     owner.value = housing.value.owner === `/users/${currentUser?.id}`;
-    console.log(housing.value.owner);
 }
 
 async function getData() {
@@ -33,7 +36,6 @@ async function getData() {
     housing.value = response["hydra:member"][0] ?? null;
 
     disabledDays.value = housing.value.rentings.map((renting) => {
-        console.log(renting);
         return {
             start: new Date(renting.dateStart),
             end: new Date(renting.dateEnd),
@@ -45,8 +47,28 @@ async function getData() {
 
 getData();
 
-function rentThisHousing() {
-    alert("test");
+async function rentThisHousing() {
+    console.log(date.value);
+
+    const renting = {
+        dateStart: date.value.start,
+        dateEnd: date.value.end,
+        housing: "/housings/" + housing.value.id,
+    };
+
+    try {
+        const rentingApi = new Renting();
+        const response = await rentingApi.create(renting);
+
+        if (response.status === 201) {
+            router.push("/");
+        } else {
+            const msg = await response.json();
+            message.value = msg["hydra:description"];
+        }
+    } catch (e) {
+        console.log(e);
+    }
 }
 </script>
 
@@ -54,7 +76,13 @@ function rentThisHousing() {
     <div v-for="a in disabledDays.value">
         <p>{{ a }}</p>
     </div>
+
     <div v-if="housing">
+        <RouterLink v-if="owner" :to="`/housing/update/${slug}`">
+            <button>Modifier mon logement</button>
+        </RouterLink>
+        
+        <template v-else>
         <h1 v-if="housing.name">{{ housing.name }}</h1>
         <img
             v-for="image in housing.media"
@@ -80,11 +108,12 @@ function rentThisHousing() {
             @input="selectRange"
             @change="submitRange"
         />
-
-        <RouterLink v-if="owner" :to="`/housing/update/${slug}`">
-            <button>Modifier mon logement</button>
-        </RouterLink>
-        <button v-else @click="rentThisHousing()">Réserver</button>
+        
+        <div v-if="message" class="app-form_outside_message">
+            {{ message }}
+        </div>
+        <button @click="rentThisHousing()">Réserver</button>
+        </div
     </div>
 
     <p v-else>Aucun logement n'a été trouvé.</p>
