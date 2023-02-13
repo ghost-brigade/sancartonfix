@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import Api from "@/api/api";
+import {Api} from "@/api/api";
 </script>
 <script>
 export default {
