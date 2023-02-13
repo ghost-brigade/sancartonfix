@@ -17,7 +17,7 @@ class Users extends Api {
   }
 
   async create(data) {
-    return await this.post(this.path, data);
+    return await this.post(this.path, data, false);
   }
 
   async update(id, data, jsonFormat = true) {
@@ -29,7 +29,7 @@ class Users extends Api {
   }
 
   async validateAccount(token) {
-    return await this.get(`${this.validateAccountPath}/${token}`);
+    return await this.get(`${this.validateAccountPath}/${token}`, null, null, {}, null, false);
   }
 
   /**

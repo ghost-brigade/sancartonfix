@@ -11,7 +11,7 @@ const housing = reactive({});
 const date = ref(null);
 
 const { slug } = useRoute().params;
-
+console.log(slug);
 async function getData() {
     const filters = [
         { property: "slug", value: slug },

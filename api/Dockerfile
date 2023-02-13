@@ -100,6 +100,8 @@ RUN set -eux; \
 	composer run-script --no-dev post-install-cmd; \
 	chmod +x bin/console; sync
 
+RUN php bin/console lexik:jwt:generate-keypair --skip-if-exists
+
 # Dev image
 FROM app_php AS app_php_dev
 

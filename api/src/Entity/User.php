@@ -149,8 +149,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ApiProperty(writable: true, readable: true, example: 'Bécile', description: 'The lastname of the user')]
     private ?string $lastname = null;
 
-    #[ORM\Column]
-    #[Assert\NotBlank]
+    #[ORM\Column(nullable: true)]
     #[Assert\Type('boolean')]
     #[Assert\Choice([true, false])]
     #[Groups(['user_read', 'user_write'])]

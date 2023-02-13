@@ -1,5 +1,5 @@
 class Api {
-  static url = "https://localhost";
+  static url = import.meta.env.VITE_API_URL;
 
   async #fetchApi(url, method, data, jsonFormat = true) {
     const headers = {
@@ -46,11 +46,11 @@ class Api {
     return url;
   }
 
-  async get(path, page = 1, itemsPerPage = 20, filters = [], orders = {}) {
+  async get(path, page = 1, itemsPerPage = 20, filters = [], orders = {}, jsonFormat = true) {
     const url = this.#buildUrl(path, page, itemsPerPage, filters, orders);
 
     try {
-      return await this.#fetchApi(url, "GET", false);
+      return await this.#fetchApi(url, "GET", false, jsonFormat);
     } catch (err) {
       throw new Error("Error while getting data");
     }

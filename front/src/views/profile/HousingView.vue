@@ -4,6 +4,7 @@ import { Housing } from "@/api/housing";
 import { SECURITY_currentUser } from "@/providers/ProviderKeys";
 import RedirectCard from "../../components/cards/RedirectCard.vue";
 import { RouterLink } from "vue-router";
+import {Api} from "../../api/api";
 
 const { currentUser } = inject(SECURITY_currentUser);
 
@@ -60,7 +61,7 @@ const handlePageChange = (newPage) => {
                                 :src="
                                     housing?.media?.contentUrl === undefined
                                         ? '/image/housing/default.jpg'
-                                        : 'https://localhost/' +
+                                        : Api.url + '/' +
                                           housing?.media?.contentUrl
                                 "
                                 :alt="housing?.slug + '-img'"

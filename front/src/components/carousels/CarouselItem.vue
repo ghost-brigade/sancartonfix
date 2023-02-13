@@ -6,11 +6,14 @@
             @mouseenter="$emit('mouseenter')"
             @mouseout="$emit('mouseout')"
         >
-            <img :src="'https://localhost' + imgUrl" />
+            <img :src="Api.url + imgUrl" />
         </div>
     </transition>
 </template>
 
+<script setup>
+import Api from "@/api/api";
+</script>
 <script>
 export default {
     props: {

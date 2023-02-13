@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { Renting } from "@/api/renting";
 import moment from "../../utils/date";
 import RedirectCard from "../../components/cards/RedirectCard.vue";
+import {Api} from "../../api/api";
 
 const rentings = ref({});
 
@@ -45,7 +46,7 @@ const handlePageChange = (newPage) => {
                                 :src="
                                     housing?.media?.contentUrl === undefined
                                         ? '/image/housing/default.jpg'
-                                        : 'https://localhost/' +
+                                        : Api.url + '/' +
                                           housing?.media?.contentUrl
                                 "
                                 :alt="renting?.housing?.slug + '-img'"
