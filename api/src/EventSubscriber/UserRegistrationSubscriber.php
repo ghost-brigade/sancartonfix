@@ -17,7 +17,7 @@ final class UserRegistrationSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private MailerInterface $mailer,
-        private EntityManagerInterface $manager
+        private EntityManagerInterface $manager,
     ) {}
 
     public static function getSubscribedEvents()
@@ -34,7 +34,7 @@ final class UserRegistrationSubscriber implements EventSubscriberInterface
 
         if ($user instanceof User and Request::METHOD_POST === $method) {
             $token = $this->generateRegistrationToken($user);
-            
+
             $this->sendConfirmationEmail($user, $token);
             $this->insertRegistrationToken($user, $token);
         }
@@ -51,9 +51,9 @@ final class UserRegistrationSubscriber implements EventSubscriberInterface
                 ->context([
                     'user' => $user,
                     'token' => $token,
-                ])  
+                ])
             ;
-            
+
             $this->mailer->send($email);
         } catch (\Exception $e) {
             throw new \Exception('Impossible d\'envoyer le mail de confirmation, veuillez ré-essayer plus tard.');
@@ -65,7 +65,7 @@ final class UserRegistrationSubscriber implements EventSubscriberInterface
             $userRegistrationToken = new UserRegistrationToken();
             $userRegistrationToken->setToken($token);
             $userRegistrationToken->setAccount($user);
-           
+
             $this->manager->persist($userRegistrationToken);
             $this->manager->flush();
         } catch (\Exception $e) {

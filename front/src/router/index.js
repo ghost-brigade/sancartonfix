@@ -84,6 +84,19 @@ const routes = [
     props: (route) => ({
       token: route.params.token,
     })
+  },
+  {
+    path: "/register",
+    name: "register",
+    component: () => import("../views/RegistrationView.vue"),
+  },
+  {
+    path: "/confirm-account/:token",
+    name: "confirm-account",
+    component: () => import("../views/ConfirmAccountView.vue"),
+    props: (route) => ({
+      token: route.params.token,
+    })
   }
 ];
 
