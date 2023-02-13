@@ -1,11 +1,13 @@
 <script setup>
 import { Housing } from "@/api/housing";
-import { ref } from "vue";
+import { ref, inject } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { DatePicker } from "v-calendar";
 import "v-calendar/dist/style.css";
 import { Api } from "@/api/api";
 import { Renting } from "@/api/renting";
+import { SECURITY_currentUser } from "@/providers/ProviderKeys";
+const { currentUser } = inject(SECURITY_currentUser);
 
 const housing = ref([]);
 const disabledDays = ref([]);
@@ -14,6 +16,11 @@ const date = ref(null);
 const message = ref(null);
 const router = useRouter();
 const { slug } = useRoute().params;
+
+const owner = ref(false);
+const isOwner = () => {
+    owner.value = housing.value.owner === `/users/${currentUser?.id}`;
+}
 
 async function getData() {
     const filters = [
@@ -35,6 +42,7 @@ async function getData() {
             end: new Date(renting.dateEnd),
         };
     });
+    isOwner();
 }
 
 getData();
@@ -70,10 +78,7 @@ async function rentThisHousing() {
     </div>
     <div v-if="housing">
         <h1 v-if="housing.name">{{ housing.name }}</h1>
-        <img
-            v-for="image in housing.media"
-            :src="Api.url + '/' + image.contentUrl"
-        />
+        <img v-for="image in housing.media" :src="Api.url + '/' + image.contentUrl" />
         <h2 v-if="housing.price">Prix : {{ housing.price }} €</h2>
 
         <p v-if="housing.description">{{ housing.description }}</p>
@@ -86,19 +91,18 @@ async function rentThisHousing() {
         <h3 v-if="housing.longitude">
             Créé le : {{ new Date(housing.createdAt).toLocaleString() }}
         </h3>
+        <RouterLink v-if="owner" :to="`/housing/update/${slug}`">
+            <button>Modifier mon logement</button>
+        </RouterLink>
+        <template v-else>
+            <DatePicker v-model="date" :disabled-dates="disabledDays" is-range @input="selectRange"
+                @change="submitRange" />
 
-        <DatePicker
-            v-model="date"
-            :disabled-dates="disabledDays"
-            is-range
-            @input="selectRange"
-            @change="submitRange"
-        />
-
-        <div v-if="message" class="app-form_outside_message">
-            {{ message }}
-        </div>
-        <button @click="rentThisHousing()">Réserver</button>
+            <div v-if="message" class="app-form_outside_message">
+                {{ message }}
+            </div>
+            <button @click="rentThisHousing()">Réserver</button>
+        </template>
     </div>
 
     <p v-else>Aucun logement n'a été trouvé.</p>

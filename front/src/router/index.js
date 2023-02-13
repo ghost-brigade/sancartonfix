@@ -86,6 +86,27 @@ const routes = [
     })
   },
   {
+    path: "/housing/update/:slug",
+    name: "housing_update",
+    component: () => import("../views/profile/UpdateHousingView.vue"),
+    meta: {
+      requiresAuth: true,
+      roles: [],
+    },
+    props: (route) => ({
+      slug: route.params.slug,
+    }),
+  },
+  {
+    path: "/profile/housing/create",
+    name: "profile-housing-create",
+    component: () => import("../views/profile/CreateHousingView.vue"),
+    meta: {
+      requiresAuth: true,
+      roles: [],
+    },
+  },
+  {
     path: "/register",
     name: "register",
     component: () => import("../views/RegistrationView.vue"),
