@@ -29,7 +29,7 @@ class Users extends Api {
   }
 
   async validateAccount(token) {
-    return await this.get(`${this.validateAccountPath}/${token}`);
+    return await this.get(`${this.validateAccountPath}/${token}`, null, null, {}, null, false);
   }
 
   /**
