@@ -10,6 +10,9 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 import { SetupCalendar } from "v-calendar";
 
+import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
+
 // Setup plugin for defaults or `$screens` (optional)
 
 // Use plugin with defaults
@@ -23,5 +26,7 @@ app.use(SetupCalendar, {});
 app.use(createPinia());
 app.use(router);
 app.component("FontAwesomeIcon", FontAwesomeIcon);
+app.use(VueSweetalert2);
+
 
 app.mount("#app");

@@ -74,10 +74,10 @@ class Api {
     }
   }
 
-  async delete(path) {
+  async delete(path, jsonFormat = true) {
     const url = new URL(Api.url + path);
     try {
-      return await this.#fetchApi(url, "DELETE");
+      return await this.#fetchApi(url, "DELETE", null, jsonFormat);
     } catch (err) {
       throw new Error("Error while deleting data");
     }
