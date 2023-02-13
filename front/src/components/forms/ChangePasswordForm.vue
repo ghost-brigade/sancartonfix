@@ -3,6 +3,7 @@ import { ref, onMounted, inject } from "vue";
 import { SECURITY_currentUser } from "@/providers/ProviderKeys";
 import { useRouter } from "vue-router";
 import { Users } from "@/api/users";
+import Swal from 'sweetalert2'
 
 const password = ref("");
 const passwordCheck = ref("");
@@ -21,13 +22,17 @@ const reset = () => {
 
 const submit = async () => {
     if (password.value !== passwordCheck.value) {
-        message.value = "Les mots de passe ne correspondent pas";
+        // message.value = "Les mots de passe ne correspondent pas";
+        await Swal.fire({title: "Attention", text: "Les mots de passe ne correspondent pas", icon: "warning"});
+
         reset();
         return;
     }
 
     if (password.value?.length < 8) {
-        message.value = "Le mot de passe doit faire au moins 8 caractères";
+        // message.value = "Le mot de passe doit faire au moins 8 caractères";
+        await Swal.fire({title: "Attention", text: "Le mot de passe doit faire au moins 8 caractères", icon: "warning"});
+
         reset();
         return;
     }
@@ -44,14 +49,13 @@ const submit = async () => {
         );
 
         if (response.ok) {
-            message.value = "Le mot de passe a bien été modifié";
+            await Swal.fire({title: "Validation", text: "Le mot de passe a bien été modifié", icon: "success"});
         } else {
             const error = await response.json();
             message.value = error.message;
         }
     } catch (err) {
-        message.value =
-            "Une erreur est survenue lors de la modification du mot de passe";
+        await Swal.fire({title: "Erreur", text: "Une erreur est survenue lors de la modification du mot de passe", icon: "error"});
     } finally {
         loading.value = false;
         reset();
@@ -82,7 +86,7 @@ const submit = async () => {
         </div>
 
         <button type="submit" :disabled="loading">
-            {{ loading ? "..." : "Connexion" }}
+            {{ loading ? "..." : "Modifier son mot de passe" }}
         </button>
     </form>
 </template>
