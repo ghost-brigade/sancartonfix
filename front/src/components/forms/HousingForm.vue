@@ -42,6 +42,7 @@ const submit = async () => {
         price: parseFloat(price.value).toFixed(2),
         category: `/categories/${category.value}`,
     }
+
     if (props.type === 'create') {
         const newHousing = await housingAPI.create(data);
         $router.push(`/housing/${newHousing.slug}`);

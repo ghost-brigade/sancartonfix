@@ -31,7 +31,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 )]
 #[Get(
     normalizationContext: ['groups' => ['renting_get', 'renting_read']],
-    security: 'is_granted("ROLE_USER") and object.getClient() == user',
+    security: 'is_granted("ROLE_ADMIN") or (is_granted("ROLE_USER") and object.getClient() == user)',
     securityMessage: 'You are not allowed to access this resource.',
 )]
 #[Post(

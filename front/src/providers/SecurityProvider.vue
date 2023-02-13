@@ -38,5 +38,8 @@ onMounted(async () => {
 
 <template>
     <LoadingElement v-if="loading" />
-    <slot v-else></slot>
+    <template v-else>
+        <p v-if="currentUser?.roles?.includes('ROLE_DELETED')"></p>
+        <slot v-else></slot>
+    </template>
 </template>

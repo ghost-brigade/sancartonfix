@@ -89,7 +89,7 @@ class Category
     #[ORM\Column(length: 128, unique: true)]
     #[Groups(['category_read'])]
     #[Gedmo\Slug(fields: ['name'], unique: true)]
-    #[ApiProperty(identifier: true, readable: true, writable: false)]
+    #[ApiProperty(readable: true, writable: false)]
     private $slug;
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Housing::class)]

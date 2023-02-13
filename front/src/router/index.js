@@ -128,6 +128,15 @@ const routes = [
       roles: [],
     },
   },
+  {
+    path: "/admin/reports",
+    name: "reports-admin",
+    component: () => import("../views/admin/AdminReport.vue"),
+    meta: {
+      requiresAuth: true,
+      roles: ['ROLE_ADMIN'],
+    },
+  }
 ];
 
 const router = createRouter({

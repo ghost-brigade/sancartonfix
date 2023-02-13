@@ -3,6 +3,7 @@ import { ref, onMounted, inject } from "vue";
 import { Security } from "@/api/security";
 import { SECURITY_currentUser } from "@/providers/ProviderKeys";
 import { useRouter } from "vue-router";
+import Swal from 'sweetalert2'
 
 const email = ref("");
 const password = ref("");
@@ -21,6 +22,7 @@ const submit = async () => {
     }
 
     if (!email.value || !password.value) {
+        Swal.fire({ title: "Attention", text: "Un des champs est vide", icon: "warning" });
         return;
     }
 
@@ -34,14 +36,18 @@ const submit = async () => {
         await security
             .profile()
             .then((user) => {
-                console.log(user);
                 setCurrentUser(user);
+                Swal.fire({ title: "Validation", text: "Connexion effectuée avec succès !", icon: "success" });
             })
             .catch((error) => {
                 error.value = error.message;
+                Swal.fire({ title: "Erreur", text: error.message, icon: "error" });
+
             });
     } catch (err) {
         error.value = err.message;
+        Swal.fire({ title: "Erreur", text: err.message, icon: "error" });
+
     } finally {
         loading.value = false;
     }
@@ -71,11 +77,7 @@ onMounted(() => {
         </div>
 
         <div class="app-form_row">
-            <input
-                v-model="password"
-                type="password"
-                placeholder="Mot de passe"
-            />
+            <input v-model="password" type="password" placeholder="Mot de passe" />
         </div>
 
         <div class="app-form_row" style="
@@ -90,7 +92,7 @@ onMounted(() => {
 
 
         <button type="submit" :disabled="loading">
-            {{ loading ? "..." : "Connexion" }}
+            {{ loading? "...": "Connexion" }}
         </button>
     </form>
 </template>

@@ -49,6 +49,11 @@ class Users extends Api {
   async resetPassword(token, data) {
     return await this.post(`${this.forgotPasswordPath}${token}`, data);
   }
+
+  async payementIntent(amount) {
+    return await this.post(`${this.path}/payment-intent`, { balanceStripe: amount }, false);
+  }
+
 }
 
 export { Users };

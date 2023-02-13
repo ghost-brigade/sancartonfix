@@ -16,9 +16,9 @@ migrate:
 	@echo "Migration done."
 
 db:
-	@echo "Creating database..."
-	@docker-compose exec php php bin/console doctrine:database:create --if-not-exists
-	@echo "Database created."
+	@docker-compose exec php bin/console d:d:d --force
+	@docker-compose exec php bin/console d:d:c
+	@docker-compose exec php bin/console d:s:u --force
 
 seed:
 	@echo "Loading fixtures..."
@@ -54,8 +54,5 @@ clear:
 	@docker-compose exec php php bin/console cache:clear
 	@echo "Cache cleared."
 
-dtc:
-	@docker compose exec php bin/console d:d:d --force
-	@docker compose exec php bin/console d:d:c
-	@docker compose exec php bin/console d:s:u --force
-	
+jwt:
+	@docker-compose exec php php bin/console lexik:jwt:generate-keypair

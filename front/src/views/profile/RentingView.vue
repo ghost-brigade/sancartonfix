@@ -1,12 +1,18 @@
 <script setup>
-import {ref} from "vue";
+import {ref, reactive, inject} from "vue";
 import {Renting} from "@/api/renting";
+import {Housing} from "@/api/housing";
+import {Report} from "@/api/report";
 import moment from "../../utils/date";
 import RedirectCard from "../../components/cards/RedirectCard.vue";
-import {Api} from "../../api/api";
+import { Api } from "@/api/api";
 import Swal from 'sweetalert2'
+import { SECURITY_currentUser } from "../../providers/ProviderKeys";
 
 const rentings = ref({});
+const housings = reactive([]);
+
+const { currentUser } = inject(SECURITY_currentUser);
 
 const items = ref(0);
 const views = ref({});
@@ -20,12 +26,28 @@ async function getData() {
     const data = await rentingApi.findAll({
         page: page.value,
         itemsPerPage: 5,
-        orders: {property: "createdAt", direction: "DESC"},
+        orders: { property: "createdAt", direction: "DESC" },
     });
 
     rentings.value = data["hydra:member"];
     items.value = data["hydra:totalItems"];
     views.value = data["hydra:view"];
+
+    
+    const housingApi = new Housing();
+
+    try {
+        const data = await housingApi.findAll({
+            page: page.value,
+            itemsPerPage: 5,
+            filters: [{ property: "owner", value: currentUser?.id }],
+            orders: { property: "createdAt", direction: "DESC" },
+        });
+
+        Object.assign(housings, data["hydra:member"]);
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 getData();
@@ -58,6 +80,23 @@ const handlePageChange = (newPage) => {
     page.value = newPage;
     getData();
 };
+
+const signalElement = (renting, housing) => {
+    const data = {
+        "content": "User reported",
+        "renting": renting['@id']
+    };
+
+    const reportApi = new Report();
+    reportApi.create(data).then((response) => {
+        Swal.fire({
+            title: 'Signalement',
+            text: 'Le signalement a bien été envoyé',
+            icon: 'success',
+            confirmButtonText: 'Ok'
+        });
+    });
+}
 </script>
 
 <template>
@@ -114,6 +153,24 @@ const handlePageChange = (newPage) => {
         </div>
         <div v-else>
             <h2>Aucune location trouvée</h2>
+        </div>
+    </section>
+
+    <section>
+        <div v-if="rentings.length > 0">
+            <h1>Mes logements réservés</h1>
+            <ul class="app-card_list">
+                <template v-for="housing in housings" :key="housings.id">
+                    <p>{{ housing.name }}</p>
+                    <template v-for="renting in housing?.rentings">
+                        <p>Du {{ renting.dateStart }} au {{ renting.dateEnd }}</p>
+                        <button @click="() => signalElement(renting, housing)">Signaler</button>
+                    </template>
+                </template>
+            </ul>
+        </div>
+        <div v-else>
+            <h2>Aucune réservation trouvée</h2>
         </div>
     </section>
 </template>

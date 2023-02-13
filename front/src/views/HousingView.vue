@@ -9,6 +9,9 @@ import { Renting } from "@/api/renting";
 import { SECURITY_currentUser } from "@/providers/ProviderKeys";
 import { Like } from "@/api/like";
 import Swal from "sweetalert2";
+import { GoogleMap, Marker } from "vue3-google-map";
+
+const API_KEY = import.meta.env.VITE_MAPS_API_KEY;
 const { currentUser } = inject(SECURITY_currentUser);
 
 const housing = ref([]);
@@ -28,7 +31,7 @@ const liked = reactive({ liked: false });
 
 const likeApi = new Like();
 const likeHousing = async () => {
-    if (liked.id) {
+    if (!liked?.id) {
         const newLike = await likeApi.create({
             "liked": true,
             "housing": "/housings/" + housing.value.id
@@ -41,17 +44,22 @@ const likeHousing = async () => {
         });
         Object.assign(liked, updatedLiked);
     }
+    await Swal.fire({
+        title: liked?.liked ? "Aimé" : "Non aimé", 
+        text: liked?.liked ? "Vous aimez ce logement, il vient d'être ajouté à vos favoris" : "Vous n'aimez plus ce logement, il a été retiré de vos favoris", 
+        icon: "success"
+    });
 }
 const loadLiked = async () => {
     const filters = [
         { property: "housing", value: housing.value.id },
     ];
 
-    const response = await likeApi.findAll({
-        page: 1,
-        itemsPerPage: 20,
+    const response = await likeApi.findAll(
+        1,
+        20,
         filters,
-    });
+    );
     if (response["hydra:member"] && response["hydra:member"].length) {
         const dataFound = response["hydra:member"][0] ?? null;
         Object.assign(liked, dataFound);
@@ -109,48 +117,79 @@ async function rentThisHousing() {
         console.log(e);
     }
 }
+
+const deleteHousing = async () => {
+    const housingApi = new Housing();
+    const removedHousing = await housingApi.remove(housing.value.id);
+
+    await Swal.fire({title: "Supprimé", text: "Vous venez de supprimer ce logement", icon: "success"});
+    router.push("/profile/housing");
+}
 </script>
 
 <template>
-    <div v-for="a in disabledDays.value">
-        <p>{{ a }}</p>
-    </div>
-    <div v-if="housing">
-        <h1 v-if="housing.name">{{ housing.name }}</h1>
-        <img v-for="image in housing.media" :src="Api.url + '/' + image.contentUrl" />
-        <h2 v-if="housing.price">Prix : {{ housing.price }} €</h2>
+    <section>
+        <div v-for="a in disabledDays.value">
+            <p>{{ a }}</p>
+        </div>
+        <div v-if="housing">
 
-        <p v-if="housing.description">{{ housing.description }}</p>
+            <div class="app-housing-header">
+                <div class="app-housing-images">
+                    <img v-for="image in housing.media" :src="Api.url + '/' + image.contentUrl"/>
+                </div>
 
-        <h2 v-if="housing.Category">Catégorie : {{ housing.Category.name }}</h2>
-
-        <h2 v-if="housing.latitude">Latitude : {{ housing.latitude }}</h2>
-        <h2 v-if="housing.longitude">Latitude : {{ housing.longitude }}</h2>
-
-        <h3 v-if="housing.longitude">
-            Créé le : {{ new Date(housing.createdAt).toLocaleString() }}
-        </h3>
-        <RouterLink v-if="owner" :to="`/housing/update/${slug}`">
-            <button>Modifier mon logement</button>
-        </RouterLink>
-        <template v-else>
-            <DatePicker v-model="date" :disabled-dates="disabledDays" is-range @input="selectRange"
-                @change="submitRange" />
-
-            <div v-if="message" class="app-form_outside_message">
-                {{ message }}
+                <GoogleMap :api-key="API_KEY"
+                    style="width: 100%; height: 400px; max-width: 500px;"
+                    :center="{ lat: housing.latitude, lng: housing.longitude }"
+                    :zoom="10"
+                >
+                    <Marker v-if=" housing.longitude && housing.latitude" :options="{ position:  { lat: housing.latitude, lng: housing.longitude } }" />
+                </GoogleMap>
             </div>
-            <div>
-                <button @click="rentThisHousing()">Réserver</button>
-                <button @click="likeHousing()">
-                    {{ liked?.liked ? "Je n'aime plus" : "J'aime" }}
-                </button>
+            <div class="app-housing-content">
+                <div class="app-housing-desc">
+                    <h1 v-if="housing.name">{{ housing.name }}</h1>
+
+                    <h2 v-if="housing.price">Prix : {{ housing.price }} €</h2>
+
+                    <p v-if="housing.description">{{ housing.description }}</p>
+
+                    <h2 v-if="housing.Category">Catégorie : {{ housing.Category.name }}</h2>
+
+                    Positions GPS : [{{ housing.longitude }}, {{ housing.latitude }}]
+                        
+                    <h3 v-if="housing.longitude">
+                        Créé le : {{ new Date(housing.createdAt).toLocaleString() }}
+                    </h3>
+                </div>
+                <div class="app-housing-actions">
+                    <template v-if="owner">
+                        <RouterLink :to="`/housing/update/${slug}`">
+                            <button>Modifier mon logement</button>
+                        </RouterLink>
+                        <button @click="deleteHousing">Supprimer mon logement</button>
+                    </template>
+                    <template v-else>
+                        <DatePicker v-model="date" :disabled-dates="disabledDays" is-range @input="selectRange"
+                            @change="submitRange" />
+
+                        <div v-if="message" class="app-form_outside_message">
+                            {{ message }}
+                        </div>
+                        <div>
+                            <button @click="rentThisHousing()">Réserver</button>
+                            <button @click="likeHousing()">
+                                {{ liked?.liked ? "Je n'aime plus" : "J'aime" }}
+                            </button>
+                        </div>
+                    </template>
+                </div>
             </div>
+        </div>
 
-        </template>
-    </div>
-
-    <p v-else>Aucun logement n'a été trouvé.</p>
+        <p v-else>Aucun logement n'a été trouvé.</p>
+    </section>
 </template>
 
 <script>

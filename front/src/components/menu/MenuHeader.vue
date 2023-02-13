@@ -35,6 +35,11 @@ const closeMenu = () => {
                     Mes favoris
                 </RouterLink>
             </template>
+            <template v-if="currentUser?.roles?.includes('ROLE_ADMIN')">
+                <RouterLink :to="{ name: 'reports-admin' }" @click="closeMenu"
+                    >Admin
+                </RouterLink>
+            </template>
             <RouterLink to="/profile" @click="closeMenu">
                 {{ currentUser.id ? "Profil" : "Connexion " }}
             </RouterLink>

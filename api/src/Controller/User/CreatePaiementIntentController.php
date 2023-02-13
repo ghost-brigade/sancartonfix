@@ -43,7 +43,7 @@ class CreatePaiementIntentController extends AbstractController
                 ]
             ],
             'mode' => 'payment',
-            'success_url' => 'https://api.sancartonfix.mimso.net//success?k=' . base64_encode($this->getUser()->getId()),
+            'success_url' => 'https://sancartonfix.mimso.net/',
             'cancel_url' => 'https://sancartonfix.mimso.net/',
             'metadata' => [
                 'user_id' => $this->getUser()->getId()

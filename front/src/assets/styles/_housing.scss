@@ -27,3 +27,37 @@
       width: 100%;
     }
   }
+
+.app-housing-images {
+  display: flex;
+  max-width: 100%;
+  overflow: auto;
+
+  img {
+    max-height: 400px;
+  }
+}
+
+.app-housing-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 2rem;
+
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+.app-housing-content {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

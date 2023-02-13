@@ -74,9 +74,9 @@ final class RentingCreateSubscriber implements EventSubscriberInterface
         $dateStart = $renting->getDateStart();
         $dateEnd = $renting->getDateEnd();
 
-        if ($dateStart >= $dateEnd) {
-            throw new \Exception('Date are not consistent');
-        }
+        // if ($dateStart >= $dateEnd) {
+        //     throw new \Exception('Date are not consistent');
+        // }
 
         return;
     }
