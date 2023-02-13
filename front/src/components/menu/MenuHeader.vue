@@ -24,13 +24,14 @@ const closeMenu = () => {
     <div class="app-menu_links" :class="`${MENU_opened ? 'opened' : ''}`">
         <nav>
             <RouterLink to="/" @click="closeMenu">Accueil</RouterLink>
-            <RouterLink to="/about" @click="closeMenu">Contact</RouterLink>
-            <RouterLink :to="{ name: 'profile-renting' }" @click="closeMenu"
-                >Mes locations</RouterLink
-            >
-            <RouterLink :to="{ name: 'profile-housing' }" @click="closeMenu"
-                >Mes logements</RouterLink
-            >
+            <template v-if="currentUser.id">
+                <RouterLink :to="{ name: 'profile-renting' }" @click="closeMenu"
+                    >Mes locations</RouterLink
+                >
+                <RouterLink :to="{ name: 'profile-housing' }" @click="closeMenu"
+                    >Mes logements</RouterLink
+                >
+            </template>
             <RouterLink to="/profile" @click="closeMenu">
                 {{ currentUser.id ? "Profil" : "Connexion " }}
             </RouterLink>
