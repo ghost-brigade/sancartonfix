@@ -12,6 +12,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Controller\User\CreatePaiementIntentController;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -53,6 +54,16 @@ use App\Controller\User\SecurityController;
 )]
 #[Post(
     denormalizationContext: ['groups' => ['user_post', 'user_write']],
+)]
+#[Post(
+    denormalizationContext: ['groups' => ['user_balance_post']],
+    openapiContext: [
+        'tags' => ['User'],
+        'summary' => 'Create a paiment intent.',
+        'description' => 'Create a paiment intent.',
+    ],
+    uriTemplate: '/users/payment-intent',
+    controller: CreatePaiementIntentController::class,
 )]
 #[Put(
     denormalizationContext: ['groups' => ['user_put', 'user_write']],
@@ -165,6 +176,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ApiProperty(writable: true, readable: true, example: 100.0, description: 'The balance of the user', securityPostDenormalize: 'is_granted("ROLE_ADMIN")')]
     private ?float $balance = 0.0;
 
+    #[ApiProperty(writable: true)]
+    #[Groups(['user_balance_post'])]
+    #[Assert\PositiveOrZero(
+        message: 'Your balance request should be positive or zero'
+    )]
+    private ?float $balanceStripe = null;
+
     public function __construct()
     {
         $this->housings = new ArrayCollection();
@@ -260,6 +278,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): self
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    public function getBalanceStripe(): ?float
+    {
+        return $this->balanceStripe;
+    }
+
+    public function setBalanceStripe(float $balanceStripe): self
+    {
+        $this->balanceStripe = $balanceStripe;
 
         return $this;
     }
