@@ -1,14 +1,18 @@
 <script setup>
 import { Housing } from "@/api/housing";
 import { ref } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { DatePicker } from "v-calendar";
 import "v-calendar/dist/style.css";
+import { Api } from "@/api/api";
+import { Renting } from "@/api/renting";
 
 const housing = ref([]);
 const disabledDays = ref([]);
 const date = ref(null);
 
+const message = ref(null);
+const router = useRouter();
 const { slug } = useRoute().params;
 
 async function getData() {
@@ -26,19 +30,37 @@ async function getData() {
     housing.value = response["hydra:member"][0] ?? null;
 
     disabledDays.value = housing.value.rentings.map((renting) => {
-        console.log(renting);
         return {
             start: new Date(renting.dateStart),
             end: new Date(renting.dateEnd),
         };
     });
-    console.log(disabledDays.value);
 }
 
 getData();
 
-function rentThisHousing() {
-    alert("test");
+async function rentThisHousing() {
+    console.log(date.value);
+
+    const renting = {
+        dateStart: date.value.start,
+        dateEnd: date.value.end,
+        housing: "/housings/" + housing.value.id,
+    };
+
+    try {
+        const rentingApi = new Renting();
+        const response = await rentingApi.create(renting);
+
+        if (response.status === 201) {
+            router.push("/");
+        } else {
+            const msg = await response.json();
+            message.value = msg["hydra:description"];
+        }
+    } catch (e) {
+        console.log(e);
+    }
 }
 </script>
 
@@ -73,6 +95,9 @@ function rentThisHousing() {
             @change="submitRange"
         />
 
+        <div v-if="message" class="app-form_outside_message">
+            {{ message }}
+        </div>
         <button @click="rentThisHousing()">Réserver</button>
     </div>
 
