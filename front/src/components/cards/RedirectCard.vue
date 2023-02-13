@@ -22,6 +22,7 @@ defineProps({
             <div class="app-card_content">
                 <slot></slot>
             </div>
+
         </RouterLink>
     </li>
 </template>

@@ -1,6 +1,6 @@
 <script setup>
-import { ref } from "vue";
-import { Renting } from "@/api/renting";
+import {ref} from "vue";
+import {Renting} from "@/api/renting";
 import moment from "../../utils/date";
 import RedirectCard from "../../components/cards/RedirectCard.vue";
 import {Api} from "../../api/api";
@@ -11,12 +11,13 @@ const items = ref(0);
 const views = ref({});
 const page = ref(1);
 
+const rentingApi = new Renting();
+
 async function getData() {
-    const rentingApi = new Renting();
     const data = await rentingApi.findAll({
         page: page.value,
         itemsPerPage: 5,
-        orders: { property: "createdAt", direction: "DESC" },
+        orders: {property: "createdAt", direction: "DESC"},
     });
 
     rentings.value = data["hydra:member"];
@@ -25,6 +26,27 @@ async function getData() {
 }
 
 getData();
+
+const cancelRenting = async (renting) => {
+    console.log(renting)
+    try {
+        const rentingApi = new Renting();
+        await rentingApi.del(renting.id);
+
+        const response = await rentingApi.del(renting.id);
+
+        if (response.ok) {
+            message.value = "Le mot de passe a bien été modifié";
+        } else {
+            const error = await response.json();
+            message.value = error.message;
+        }
+    } catch (err) {
+        message.value =
+            "Une erreur est survenue lors de la modification du mot de passe";
+    }
+    // getData();
+};
 
 const handlePageChange = (newPage) => {
     page.value = newPage;
@@ -55,23 +77,25 @@ const handlePageChange = (newPage) => {
 
                         <h3>{{ renting?.housing?.name }}</h3>
                         <span
-                            >Réservation du :
-                            {{ moment(renting?.dateStart).format("LL") }} au
-                            {{ moment(renting?.dateEnd).format("LL") }}</span
+                        >Réservation du :
+                            {{ moment(renting?.dateStart).format("DD/MM/YYYY") }} au
+                            {{ moment(renting?.dateEnd).format("DD/MM/YYYY") }}</span
                         >
                     </RedirectCard>
+                    <button @click="cancelRenting(renting)">Annuler</button>
+
                 </template>
             </ul>
 
-            <br />
+            <br/>
 
             <div>
                 <div v-show="views['hydra:next']">
-                    <button @click="handlePageChange(page + 1)">Next</button>
+                    <button @click="handlePageChange(page + 1)">Suivant</button>
                 </div>
                 <div v-show="views['hydra:previous']">
                     <button @click="handlePageChange(page - 1)">
-                        Previous
+                        Précédent
                     </button>
                 </div>
             </div>

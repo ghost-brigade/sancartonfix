@@ -78,17 +78,17 @@ const handlePageChange = (newPage) => {
 
             <div>
                 <div v-show="views['hydra:next']">
-                    <button @click="handlePageChange(page + 1)">Next</button>
+                    <button @click="handlePageChange(page + 1)">Suivant</button>
                 </div>
                 <div v-show="views['hydra:previous']">
                     <button @click="handlePageChange(page - 1)">
-                        Previous
+                        Précédent
                     </button>
                 </div>
             </div>
         </div>
         <div v-else>
-            <h2>Aucune logement trouvée</h2>
+            <h2>Aucun logement trouvée</h2>
         </div>
     </section>
 </template>
