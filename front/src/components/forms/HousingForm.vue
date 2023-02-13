@@ -4,6 +4,8 @@ import { GoogleMap, Marker } from "vue3-google-map";
 import { Housing } from "@/api/housing";
 import CategoriesOptions from './CategoriesOptions.vue';
 import { useRouter } from "vue-router";
+import Swal from 'sweetalert2'
+
 const $router = useRouter();
 const props = defineProps({
     housing: {
@@ -43,9 +45,12 @@ const submit = async () => {
     if (props.type === 'create') {
         const newHousing = await housingAPI.create(data);
         $router.push(`/housing/${newHousing.slug}`);
+        await Swal.fire({title: "Validation", text: "Votre logement a bien été créé", icon: "success"});
+
     } else if (props.type === 'update') {
         const updatedHousing = await housingAPI.update(props.housing.id, data);
         $router.push(`/housing/${updatedHousing.slug}`);
+        await Swal.fire({title: "Validation", text: "Votre logement a bien été modifié", icon: "success"});
     }
 }
 const API_KEY = import.meta.env.VITE_MAPS_API_KEY;
@@ -61,7 +66,7 @@ const selectOnMap = (event) => {
             <label for="name">Nom du logement</label>
             <input type="text" id="name" v-model="name" placeholder="Nom du logement" />
         </div>
-        
+
         <div class="app-form_row">
             <label for="description">Description du logement</label>
             <textarea id="description" v-model="description" placeholder="Description du logement"></textarea>
@@ -76,9 +81,9 @@ const selectOnMap = (event) => {
                 <CategoriesOptions />
             </select>
         </div>
-        <GoogleMap :api-key="API_KEY" 
+        <GoogleMap :api-key="API_KEY"
             style="width: 100%; height: 500px"
-            :center="{ lat: 48.85, lng: 2.35 }" 
+            :center="{ lat: 48.85, lng: 2.35 }"
             :zoom="14"
             @click="selectOnMap"
         >

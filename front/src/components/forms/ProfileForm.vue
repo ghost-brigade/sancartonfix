@@ -2,6 +2,7 @@
 import { inject, ref, watch } from "vue";
 import { SECURITY_currentUser } from "@/providers/ProviderKeys";
 import { Users } from "@/api/users";
+import Swal from "sweetalert2";
 
 /**
  * "id": "1ed98034-ff73-61f2-acdc-f91a37951843",
@@ -36,6 +37,7 @@ const submit = async () => {
     }
 
     if (!email.value || !firstname.value || !lastname.value) {
+        await Swal.fire({title: "Attention", text: "Un des champs est vide", icon: "warning"});
         return;
     }
 
@@ -55,6 +57,8 @@ const submit = async () => {
         .update(currentUser.id, userUpdate)
         .finally(() => {
             loading.value = false;
+            Swal.fire({title: "Validation", text: "Vos informations ont bien été modifié", icon: "success"});
+
         });
 
     setCurrentUser(updated);

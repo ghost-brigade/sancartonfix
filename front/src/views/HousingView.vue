@@ -7,6 +7,7 @@ import "v-calendar/dist/style.css";
 import { Api } from "@/api/api";
 import { Renting } from "@/api/renting";
 import { SECURITY_currentUser } from "@/providers/ProviderKeys";
+import Swal from "sweetalert2";
 const { currentUser } = inject(SECURITY_currentUser);
 
 const housing = ref([]);
@@ -64,7 +65,8 @@ async function rentThisHousing() {
             router.push("/");
         } else {
             const msg = await response.json();
-            message.value = msg["hydra:description"];
+            await Swal.fire({title: "Erreur", text: msg["hydra:description"], icon: "error"});
+            // message.value = msg["hydra:description"];
         }
     } catch (e) {
         console.log(e);
