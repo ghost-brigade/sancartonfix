@@ -1,5 +1,5 @@
 class Api {
-  static url = "https://localhost";
+  static url = import.meta.env.VITE_API_URL;
 
   async #fetchApi(url, method, data, jsonFormat = true) {
     const headers = {

@@ -51,7 +51,7 @@ const handlePageChange = (newPage) => {
                                 :src="
                                     housing?.media?.contentUrl === undefined
                                         ? '/image/housing/default.jpg'
-                                        : 'https://localhost/' +
+                                        : import.meta.env.VITE_API_URL + '/' +
                                           housing?.media?.contentUrl
                                 "
                                 :alt="housing?.slug + '-img'"
