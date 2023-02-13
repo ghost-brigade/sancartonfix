@@ -28,7 +28,7 @@ class Category extends Api {
     return await this.put(`${this.path}/${id}`, data);
   }
 
-  async delete(id) {
+  async remove(id) {
     return await this.delete(`${this.path}/${id}`);
   }
 }

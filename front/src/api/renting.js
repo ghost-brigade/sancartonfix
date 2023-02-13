@@ -22,8 +22,8 @@ class Renting extends Api {
     return await this.put(`${this.path}/${id}`, data);
   }
 
-  async del(id) {
-    return await this.delete(`${this.path}/${id}`);
+  async remove(id, jsonFormat = true) {
+    return await this.delete(`${this.path}/${id}`, jsonFormat);
   }
 }
 
